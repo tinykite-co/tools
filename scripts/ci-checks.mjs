@@ -18,7 +18,10 @@ async function listFiles(dir) {
 }
 
 function countLines(content) {
-  return content.split(/\r?\n/).length;
+  if (content.length === 0) {
+    return 0;
+  }
+  return content.replace(/\r?\n$/, "").split(/\r?\n/).length;
 }
 
 async function assertPlaywrightTests() {

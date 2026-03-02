@@ -32,8 +32,13 @@ const forbidden = [
   "scripts/generate-sitemap.mjs"
 ];
 
-execSync("git fetch origin main --depth=1", { stdio: "inherit" });
-const output = execSync("git diff --name-only origin/main...HEAD", { encoding: "utf8" });
+execSync("git fetch origin main --depth=1000", { stdio: "inherit" });
+let output = "";
+try {
+  output = execSync("git diff --name-only origin/main...HEAD", { encoding: "utf8" });
+} catch {
+  output = execSync("git diff --name-only origin/main..HEAD", { encoding: "utf8" });
+}
 const changed = output.split(/\r?\n/).filter(Boolean);
 
 const forbiddenHits = changed.filter((file) =>
