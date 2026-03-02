@@ -13,7 +13,7 @@
     "typecheck": "pnpm run generate && pnpm -r --filter ./packages/** run typecheck && pnpm --filter web run typecheck",
     "test": "pnpm -r --filter ./packages/** run test",
     "test:e2e": "pnpm --filter web run test:e2e",
-    "build": "pnpm run generate && pnpm --filter web run build",
+    "build": "pnpm run generate && pnpm -r --filter ./packages/** run build && pnpm --filter web run build",
     "dev": "pnpm run generate && pnpm --filter web run dev",
     "changeset": "changeset",
     "version-packages": "changeset version",
