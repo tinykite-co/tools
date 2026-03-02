@@ -1,5 +1,5 @@
 {
-  "name": "@tinykite/$pkg",
+  "name": "@tinykite/zip",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -8,6 +8,9 @@
     ".": "./dist/index.js"
   },
   "files": ["dist"],
+  "dependencies": {
+    "@tinykite/core": "0.1.0"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
