@@ -9,34 +9,237 @@ import { flows } from "../registry/flows/generated/flows.generated";
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <title>Tinykite Tools</title>
+    <title>TinyKite Tools - Free SEO Utilities</title>
+    <meta name="description" content="A premium suite of free, secure, browser-based utilities. Remove backgrounds, resize images, and more." />
+    
+    <style>
+      :root {
+        --max-width: 1200px;
+      }
+      
+      body {
+        margin: 0;
+        background-color: var(--ru-color-background);
+        color: var(--ru-color-foreground);
+        font-family: var(--ru-font-sans);
+        line-height: 1.5;
+        overflow-x: hidden;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.8);
+        border-bottom: 1px solid var(--ru-color-border);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .site-header {
+          background: rgba(9, 9, 11, 0.8);
+        }
+      }
+
+      .header-container {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo-link {
+        font-weight: 700;
+        font-size: 1.25rem;
+        letter-spacing: -0.05em;
+        text-decoration: none;
+        color: var(--ru-color-foreground);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .hero {
+        padding: 8rem 2rem 6rem;
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 10;
+      }
+
+      .hero h1 {
+        font-size: clamp(3rem, 6vw, 4.5rem);
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+        background: linear-gradient(180deg, var(--ru-color-foreground) 0%, var(--ru-color-muted-foreground) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero p {
+        font-size: 1.25rem;
+        color: var(--ru-color-muted-foreground);
+        max-width: 600px;
+        margin: 0 auto;
+        font-weight: 400;
+      }
+
+      .grid-section {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 0 2rem 6rem;
+        position: relative;
+        z-index: 10;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        letter-spacing: -0.025em;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--ru-color-border);
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2rem;
+      }
+
+      .tool-card {
+        background: var(--ru-color-background);
+        border: 1px solid var(--ru-color-border);
+        border-radius: var(--ru-radius-md);
+        padding: 2rem;
+        text-decoration: none;
+        color: var(--ru-color-foreground);
+        transition: all 0.2s ease;
+        box-shadow: var(--ru-shadow-sm);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      .tool-card:hover {
+        border-color: var(--ru-color-muted-foreground);
+        box-shadow: var(--ru-shadow-md);
+        transform: translateY(-2px);
+      }
+
+      .tool-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: -0.025em;
+        margin-bottom: 0.5rem;
+      }
+
+      .tool-category {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+        color: var(--ru-color-muted-foreground);
+        margin-bottom: 1rem;
+      }
+
+      .tool-desc {
+        color: var(--ru-color-muted-foreground);
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+        flex-grow: 1;
+      }
+
+      .tool-action {
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--ru-color-foreground);
+      }
+
+      /* Glow background */
+      .glow-bg {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100vw;
+        height: 600px;
+        background: radial-gradient(circle at 50% 0%, rgba(120, 119, 198, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .glow-bg {
+          background: radial-gradient(circle at 50% 0%, rgba(120, 119, 198, 0.2) 0%, rgba(9, 9, 11, 0) 70%);
+        }
+      }
+    </style>
   </head>
   <body>
-    <main class="page">
-      <h1>Tinykite Tools</h1>
-      <p>Fast, reliable utilities built for real workflows.</p>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="/" class="logo-link">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="m3 15 2 2 4-4"/></svg>
+          TinyKite
+        </a>
+        <nav>
+          <a href="https://tinykite.co" style="text-decoration: none; color: var(--ru-color-muted-foreground); font-weight: 500; font-size: 0.9rem;">Back to Studio &rarr;</a>
+        </nav>
+      </div>
+    </header>
 
-      <section>
-        <h2>Tools</h2>
-        <ul>
-          {tools.map((tool) => (
-            <li>
-              <a href={`/tools/${tool.slug}`}>{tool.title}</a>
-              <span> — {tool.category}</span>
-            </li>
-          ))}
-        </ul>
+    <main>
+      <div class="glow-bg"></div>
+
+      <section class="hero">
+        <h1>Powerful Local Utilities</h1>
+        <p>A premium suite of single-purpose tools that run entirely in your browser. 100% private. 100% free.</p>
       </section>
 
-      <section>
-        <h2>Flows</h2>
-        <ul>
-          {flows.map((flow) => (
-            <li>
-              <a href={`/flows/${flow.slug}`}>{flow.title}</a>
-            </li>
+      <section class="grid-section">
+        <h2 class="section-title">Free Tools</h2>
+        <div class="card-grid">
+          {tools.map((tool) => (
+            <a href={`/tools/${tool.slug}`} class="tool-card">
+              <div class="tool-category">{tool.category}</div>
+              <div class="tool-title">{tool.title}</div>
+              <div class="tool-desc">{tool.seo.summary || `Launch the free ${tool.title} utility instantly in your browser.`}</div>
+              <div class="tool-action">
+                Launch Tool 
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              </div>
+            </a>
           ))}
-        </ul>
+        </div>
+      </section>
+
+      <section class="grid-section">
+        <h2 class="section-title">Premium Workflows</h2>
+        <div class="card-grid">
+          {flows.map((flow) => (
+            <a href={`/flows/${flow.slug}`} class="tool-card" style="border-color: var(--ru-color-ring); position: relative; overflow: hidden;">
+              <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #7877C6, #FF6B6B);"></div>
+              <div class="tool-category" style="color: var(--ru-color-foreground);">Pro Flow</div>
+              <div class="tool-title">{flow.title}</div>
+              <div class="tool-desc">{`A complex, multi-step premium flow for ${flow.title}. Log in via TinyKite Router to access.`}</div>
+              <div class="tool-action">
+                View Workflow
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              </div>
+            </a>
+          ))}
+        </div>
       </section>
     </main>
     <ServiceWorkerRegister />

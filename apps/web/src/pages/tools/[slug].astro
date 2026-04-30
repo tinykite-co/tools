@@ -18,16 +18,200 @@ const { tool } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <title>{tool.title} | Tinykite Tools</title>
-    <meta name="description" content={tool.seo.description} />
+    <title>{tool.title} - Free Online Tool | TinyKite</title>
+    <meta name="description" content={tool.seo.description || `Use our free online ${tool.title} to get professional results instantly. No signup required.`} />
+    <meta property="og:title" content={`${tool.title} | TinyKite`} />
+    <meta property="og:description" content={tool.seo.description} />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <style>
+      :root {
+        --max-width: 1100px;
+      }
+      
+      body {
+        margin: 0;
+        background-color: var(--ru-color-background);
+        color: var(--ru-color-foreground);
+        font-family: var(--ru-font-sans);
+        line-height: 1.5;
+        overflow-x: hidden;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.8);
+        border-bottom: 1px solid var(--ru-color-border);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .site-header {
+          background: rgba(9, 9, 11, 0.8);
+        }
+      }
+
+      .header-container {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo-link {
+        font-weight: 700;
+        font-size: 1.25rem;
+        letter-spacing: -0.05em;
+        text-decoration: none;
+        color: var(--ru-color-foreground);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .hero {
+        padding: 6rem 2rem 4rem;
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .hero h1 {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        line-height: 1.1;
+        letter-spacing: -0.04em;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+        background: linear-gradient(180deg, var(--ru-color-foreground) 0%, var(--ru-color-muted-foreground) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero p {
+        font-size: 1.25rem;
+        color: var(--ru-color-muted-foreground);
+        max-width: 600px;
+        margin: 0 auto;
+        font-weight: 400;
+      }
+
+      .tool-container {
+        padding: 0 2rem 6rem;
+        position: relative;
+        z-index: 10;
+      }
+
+      /* Subtle glowing orb behind the tool for premium feel */
+      .glow-bg {
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80vw;
+        max-width: 1000px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(120, 119, 198, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .glow-bg {
+          background: radial-gradient(circle, rgba(120, 119, 198, 0.15) 0%, rgba(9, 9, 11, 0) 70%);
+        }
+      }
+
+      .seo-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 4rem 2rem 8rem;
+        border-top: 1px solid var(--ru-color-border);
+      }
+
+      .seo-content h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        letter-spacing: -0.025em;
+      }
+
+      .seo-content h3 {
+        font-size: 1.25rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .seo-content p {
+        color: var(--ru-color-muted-foreground);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+      }
+
+      .footer {
+        border-top: 1px solid var(--ru-color-border);
+        padding: 4rem 2rem;
+        text-align: center;
+        color: var(--ru-color-muted-foreground);
+      }
+    </style>
   </head>
   <body>
-    <main class="page">
-      <a href="/">Back</a>
-      <h1>{tool.title}</h1>
-      <p>{tool.seo.summary}</p>
-      <ToolRunner client:visible tool={tool} />
+    <header class="site-header">
+      <div class="header-container">
+        <a href="/" class="logo-link">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="m3 15 2 2 4-4"/></svg>
+          TinyKite
+        </a>
+        <nav>
+          <a href="/tools" style="text-decoration: none; color: var(--ru-color-muted-foreground); font-weight: 500; font-size: 0.9rem;">Browse All Tools &rarr;</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="glow-bg"></div>
+      
+      <section class="hero">
+        <h1>{tool.title}</h1>
+        <p>{tool.seo.summary || `Instantly generate your ${tool.title.toLowerCase()} right in your browser. Fast, free, and completely secure.`}</p>
+      </section>
+
+      <section class="tool-container">
+        <ToolRunner client:visible tool={tool} />
+      </section>
+
+      <section class="seo-content">
+        <h2>How to use the {tool.title}</h2>
+        <p>Our {tool.title.toLowerCase()} tool is designed to be the fastest and most secure way to process your files. Because everything runs directly in your browser using cutting-edge WebAssembly (WASM) and Web Workers, your data never touches our servers.</p>
+        
+        <h3>Step-by-Step Guide</h3>
+        <ol style="color: var(--ru-color-muted-foreground); line-height: 1.8;">
+          <li>Upload your input file using the secure upload zone above.</li>
+          <li>Configure any specific settings required for the {tool.title.toLowerCase()}.</li>
+          <li>Click the "Generate Output" button. Our local engine will process your request instantly.</li>
+          <li>Download your high-resolution results directly to your device.</li>
+        </ol>
+
+        <h3>Privacy First</h3>
+        <p>Unlike other online tools that upload your sensitive images and documents to remote servers, TinyKite processes everything locally on your device. This guarantees 100% privacy and blazing-fast performance.</p>
+      </section>
     </main>
+
+    <footer class="footer">
+      <div style="max-width: var(--max-width); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div style="font-weight: 600; color: var(--ru-color-foreground);">TinyKite &copy; 2026</div>
+        <div style="display: flex; gap: 1.5rem; font-size: 0.9rem;">
+          <a href="/" style="color: inherit; text-decoration: none;">Home</a>
+          <a href="/privacy" style="color: inherit; text-decoration: none;">Privacy</a>
+          <a href="/terms" style="color: inherit; text-decoration: none;">Terms</a>
+        </div>
+      </div>
+    </footer>
+
     <ServiceWorkerRegister />
   </body>
 </html>
