@@ -10,12 +10,14 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.9",
     "@astrojs/react": "^3.6.0",
+    "@refraction-ui/react": "^0.3.9",
     "@tinykite/core": "workspace:*",
     "@tinykite/image": "workspace:*",
     "@tinykite/pdf": "workspace:*",
-    "@tinykite/text": "workspace:*",
     "@tinykite/templates-base": "workspace:*",
+    "@tinykite/text": "workspace:*",
     "@tinykite/ui-schema": "workspace:*",
     "@tinykite/zip": "workspace:*",
     "astro": "^5.2.5",
@@ -24,7 +26,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",
-    "typescript": "^5.6.3",
+    "typescript": "^5.9.3",
     "vitest": "^2.1.9"
   }
 }

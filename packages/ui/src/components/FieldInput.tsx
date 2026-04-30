@@ -1,17 +1,15 @@
+import React from "react";
 import type { FieldSchema } from "@tinykite/ui-schema";
-import { Textarea, Select, Input } from "@refraction-ui/react";
+import { Input, Textarea, Select } from "@refraction-ui/react";
 
-export default function FieldInput({
-  field,
-  value,
-  onChange,
-  compact
-}: {
+export interface FieldInputProps {
   field: FieldSchema;
   value: any;
   onChange: (value: any) => void;
-  compact: boolean;
-}) {
+  compact?: boolean;
+}
+
+export function FieldInput({ field, value, onChange, compact }: FieldInputProps) {
   if (field.type === "textarea") {
     return (
       <Textarea
@@ -21,7 +19,7 @@ export default function FieldInput({
         placeholder={field.placeholder}
         required={field.required}
         value={value}
-        onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => onChange(event.target.value)}
+        onChange={(event: any) => onChange(event.target.value)}
       />
     );
   }
@@ -33,7 +31,7 @@ export default function FieldInput({
         name={field.id}
         value={value}
         required={field.required}
-        onChange={(event: React.ChangeEvent<HTMLSelectElement>) => onChange(event.target.value)}
+        onChange={(event: any) => onChange(event.target.value)}
       >
         {field.options?.map((option) => (
           <option key={option.value} value={option.value}>
@@ -50,10 +48,11 @@ export default function FieldInput({
         id={field.id}
         name={field.id}
         type="file"
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          const file = event.target.files?.[0];
+        onChange={async (e: any) => {
+          const file = e.target.files?.[0];
           if (file) {
-            onChange({ image: file, filename: file.name });
+            const buffer = await file.arrayBuffer();
+            onChange({ image: buffer, filename: file.name });
           } else {
             onChange("");
           }
@@ -70,7 +69,7 @@ export default function FieldInput({
       placeholder={field.placeholder}
       required={field.required}
       value={value}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => onChange(event.target.value)}
+        onChange={(event: any) => onChange(event.target.value)}
     />
   );
 }

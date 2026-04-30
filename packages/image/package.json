@@ -7,7 +7,9 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -16,5 +18,9 @@
   "devDependencies": {
     "typescript": "^5.6.3",
     "vitest": "^2.1.9"
+  },
+  "dependencies": {
+    "@imgly/background-removal": "^1.7.0",
+    "@tinykite/core": "workspace:^"
   }
 }

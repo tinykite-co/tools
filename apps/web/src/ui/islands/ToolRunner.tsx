@@ -11,14 +11,16 @@ import ResultsList from "../components/ResultsList";
 import SettingsPanel from "../components/SettingsPanel";
 import StatusPills from "../components/StatusPills";
 import { motionTokens } from "../motion/motionTokens";
+import { Button, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@refraction-ui/react";
+
 const emptyProgress: ProgressState = { label: "Idle", percent: 0 };
 
 export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
   const initialValues = useMemo(
-    () => Object.fromEntries(tool.params.map((param) => [param.id, ""])) as Record<string, string>,
+    () => Object.fromEntries(tool.params.map((param) => [param.id, ""])) as Record<string, any>,
     [tool.params]
   );
-  const [values, setValues] = useState<Record<string, string>>(initialValues);
+  const [values, setValues] = useState<Record<string, any>>(initialValues);
   const [progress, setProgress] = useState<ProgressState>(emptyProgress);
   const [status, setStatus] = useState<"idle" | "running" | "success" | "error">("idle");
   const [result, setResult] = useState<unknown>(null);
@@ -52,6 +54,12 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
     setWarning(processing.warning);
 
     const payload = tool.params.length === 1 ? values[tool.params[0].id] ?? "" : values;
+
+    if (!payload || payload === "") {
+      setStatus("error");
+      setError("Please provide the required input.");
+      return;
+    }
 
     try {
       const output = await executeTool({
@@ -94,57 +102,70 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
 
   return (
     <section className="tool-runner page" style={motionStyle}>
-      <p className="runner-meta">Runner: {tool.runner.split(":")[1] ?? tool.runner}</p>
-      {tool.onboarding && <OnboardingTips tips={tool.onboarding.tips} storageKey={tool.onboarding.key} />}
+      <Card>
+        <CardHeader>
+          <CardTitle>{tool.title ?? tool.slug}</CardTitle>
+          <CardDescription>Runner: {tool.runner.split(":")[1] ?? tool.runner}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {tool.onboarding && <OnboardingTips tips={tool.onboarding.tips} storageKey={tool.onboarding.key} />}
 
-      <form className="tool-form" onSubmit={(event) => event.preventDefault()}>
-        {tool.params.map((field) => (
-          <label key={field.id} className="field">
-            <span>{field.label}</span>
-            <FieldInput
-              field={field}
-              value={values[field.id] ?? ""}
-              compact={compact}
-              onChange={(next) => setValues((prev) => ({ ...prev, [field.id]: next }))}
+          <form className="tool-form" onSubmit={(event) => event.preventDefault()}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {tool.params.map((field) => (
+                <label key={field.id} className="field" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <span style={{ fontWeight: 500 }}>{field.label}</span>
+                  <FieldInput
+                    field={field}
+                    value={values[field.id] ?? ""}
+                    compact={compact}
+                    onChange={(next) => setValues((prev) => ({ ...prev, [field.id]: next }))}
+                  />
+                </label>
+              ))}
+            </div>
+            <div className="actions" style={{ display: 'flex', gap: '0.5rem', marginTop: '1.5rem' }}>
+              <Button type="button" onClick={handleRun} disabled={status === "running"} variant="primary">
+                Run
+              </Button>
+              {status === "running" && (
+                <Button type="button" variant="outline" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              )}
+              <Button as="a" variant="ghost" href={feedbackUrl}>
+                Feedback
+              </Button>
+            </div>
+          </form>
+
+          <SettingsPanel title="Processing settings">
+            <p>Mode: {processing.label}</p>
+            <p>Layout: {compact ? "Compact" : "Comfortable"}</p>
+            <p>Memory: {caps.deviceMemory ? `${caps.deviceMemory} GB` : "Unknown"}</p>
+            <StatusPills
+              items={[
+                { label: caps.worker ? "Worker" : "No worker", tone: caps.worker ? "success" : "warning" },
+                { label: caps.wasm ? "WASM" : "No WASM", tone: caps.wasm ? "success" : "warning" },
+                {
+                  label: caps.offscreenCanvas ? "OffscreenCanvas" : "No OffscreenCanvas",
+                  tone: caps.offscreenCanvas ? "success" : "warning"
+                }
+              ]}
             />
-          </label>
-        ))}
-        <div className="actions">
-          <button type="button" onClick={handleRun} disabled={status === "running"}>
-            Run
-          </button>
-          {status === "running" && (
-            <button type="button" className="ghost" onClick={handleCancel}>
-              Cancel
-            </button>
+            {warning && <p className="warning" style={{ color: 'var(--ru-color-warning-foreground, orange)', marginTop: '0.5rem' }}>{warning}</p>}
+          </SettingsPanel>
+
+          <ProgressBar percent={progress.percent} label={progress.label} />
+
+          {status === "error" && <p className="error" style={{ color: 'var(--ru-color-destructive, red)', marginTop: '1rem' }}>{error}</p>}
+          {status === "success" && (
+            <div style={{ marginTop: '1.5rem' }}>
+              <ResultsList result={result} />
+            </div>
           )}
-          <a className="ghost" href={feedbackUrl}>
-            Feedback
-          </a>
-        </div>
-      </form>
-
-      <SettingsPanel title="Processing settings">
-        <p>Mode: {processing.label}</p>
-        <p>Layout: {compact ? "Compact" : "Comfortable"}</p>
-        <p>Memory: {caps.deviceMemory ? `${caps.deviceMemory} GB` : "Unknown"}</p>
-        <StatusPills
-          items={[
-            { label: caps.worker ? "Worker" : "No worker", tone: caps.worker ? "success" : "warning" },
-            { label: caps.wasm ? "WASM" : "No WASM", tone: caps.wasm ? "success" : "warning" },
-            {
-              label: caps.offscreenCanvas ? "OffscreenCanvas" : "No OffscreenCanvas",
-              tone: caps.offscreenCanvas ? "success" : "warning"
-            }
-          ]}
-        />
-        {warning && <p className="warning">{warning}</p>}
-      </SettingsPanel>
-
-      <ProgressBar percent={progress.percent} label={progress.label} />
-
-      {status === "error" && <p className="error">{error}</p>}
-      {status === "success" && <ResultsList result={result} />}
+        </CardContent>
+      </Card>
     </section>
   );
 }
