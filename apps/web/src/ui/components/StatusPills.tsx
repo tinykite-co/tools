@@ -1,5 +1,5 @@
 import Icon from "./Icon";
-import { Badge } from "@refraction-ui/react";
+import { Badge } from "@tinykite/ui";
 
 export interface StatusPill {
   label: string;

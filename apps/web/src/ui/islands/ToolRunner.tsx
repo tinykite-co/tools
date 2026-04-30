@@ -11,7 +11,7 @@ import ResultsList from "../components/ResultsList";
 import SettingsPanel from "../components/SettingsPanel";
 import StatusPills from "../components/StatusPills";
 import { motionTokens } from "../motion/motionTokens";
-import { Button, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@refraction-ui/react";
+import { Button, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, ThemeProvider } from "@tinykite/ui";
 
 const emptyProgress: ProgressState = { label: "Idle", percent: 0 };
 
@@ -30,6 +30,7 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
   const [compact, setCompact] = useState(false);
   const [userAgent, setUserAgent] = useState<string | undefined>(undefined);
   const abortRef = useRef<AbortController | null>(null);
+  
   useEffect(() => {
     setValues(initialValues);
   }, [initialValues]);
@@ -101,71 +102,102 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
   } as React.CSSProperties;
 
   return (
-    <section className="tool-runner page" style={motionStyle}>
-      <Card>
-        <CardHeader>
-          <CardTitle>{tool.title ?? tool.slug}</CardTitle>
-          <CardDescription>Runner: {tool.runner.split(":")[1] ?? tool.runner}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {tool.onboarding && <OnboardingTips tips={tool.onboarding.tips} storageKey={tool.onboarding.key} />}
+    <ThemeProvider>
+      <section className="tool-runner" style={{ ...motionStyle, maxWidth: '720px', margin: '40px auto', fontFamily: 'var(--ru-font-sans)' }}>
+        <Card style={{ border: '1px solid var(--ru-color-border)', boxShadow: 'var(--ru-shadow-md)', borderRadius: 'var(--ru-radius)' }}>
+          <CardHeader style={{ padding: '32px 32px 16px', borderBottom: '1px solid var(--ru-color-border)' }}>
+            <CardTitle style={{ fontSize: '1.5rem', fontWeight: 600, letterSpacing: '-0.025em', color: 'var(--ru-color-foreground)' }}>
+              {tool.title ?? tool.slug}
+            </CardTitle>
+            <CardDescription style={{ fontSize: '0.875rem', color: 'var(--ru-color-muted-foreground)', marginTop: '4px' }}>
+              Runner: {tool.runner.split(":")[1] ?? tool.runner}
+            </CardDescription>
+          </CardHeader>
+          
+          <CardContent style={{ padding: '32px' }}>
+            {tool.onboarding && <OnboardingTips tips={tool.onboarding.tips} storageKey={tool.onboarding.key} />}
 
-          <form className="tool-form" onSubmit={(event) => event.preventDefault()}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {tool.params.map((field) => (
-                <label key={field.id} className="field" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <span style={{ fontWeight: 500 }}>{field.label}</span>
-                  <FieldInput
-                    field={field}
-                    value={values[field.id] ?? ""}
-                    compact={compact}
-                    onChange={(next) => setValues((prev) => ({ ...prev, [field.id]: next }))}
-                  />
-                </label>
-              ))}
-            </div>
-            <div className="actions" style={{ display: 'flex', gap: '0.5rem', marginTop: '1.5rem' }}>
-              <Button type="button" onClick={handleRun} disabled={status === "running"} variant="primary">
-                Run
-              </Button>
-              {status === "running" && (
-                <Button type="button" variant="outline" onClick={handleCancel}>
-                  Cancel
+            <form className="tool-form" onSubmit={(event) => event.preventDefault()}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                {tool.params.map((field) => (
+                  <label key={field.id} className="field" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <span style={{ fontWeight: 500, fontSize: '0.9rem', color: 'var(--ru-color-foreground)' }}>{field.label}</span>
+                    <FieldInput
+                      field={field}
+                      value={values[field.id] ?? ""}
+                      compact={compact}
+                      onChange={(next) => setValues((prev) => ({ ...prev, [field.id]: next }))}
+                    />
+                  </label>
+                ))}
+              </div>
+              
+              <div className="actions" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '32px' }}>
+                <Button 
+                  type="button" 
+                  onClick={handleRun} 
+                  disabled={status === "running"} 
+                  variant="primary"
+                  style={{ padding: '0 24px', height: '40px', fontWeight: 500, transition: 'all 0.2s' }}
+                >
+                  {status === "running" ? "Processing..." : "Generate Output"}
                 </Button>
-              )}
-              <Button as="a" variant="ghost" href={feedbackUrl}>
-                Feedback
-              </Button>
+                
+                {status === "running" && (
+                  <Button type="button" variant="outline" onClick={handleCancel} style={{ height: '40px' }}>
+                    Cancel
+                  </Button>
+                )}
+                
+                <div style={{ flex: 1 }} />
+                
+                <Button as="a" variant="ghost" href={feedbackUrl} style={{ color: 'var(--ru-color-muted-foreground)' }}>
+                  Provide Feedback
+                </Button>
+              </div>
+            </form>
+
+            <div style={{ marginTop: '32px' }}>
+              <SettingsPanel title="Processing Engine Details">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '0.85rem', color: 'var(--ru-color-muted-foreground)' }}>
+                  <div><strong>Mode:</strong> {processing.label}</div>
+                  <div><strong>Layout:</strong> {compact ? "Compact" : "Comfortable"}</div>
+                  <div><strong>Memory:</strong> {caps.deviceMemory ? `${caps.deviceMemory} GB` : "Unknown"}</div>
+                </div>
+                <div style={{ marginTop: '16px' }}>
+                  <StatusPills
+                    items={[
+                      { label: caps.worker ? "Worker Active" : "No Worker", tone: caps.worker ? "success" : "warning" },
+                      { label: caps.wasm ? "WASM Active" : "No WASM", tone: caps.wasm ? "success" : "warning" },
+                      { label: caps.offscreenCanvas ? "OffscreenCanvas Active" : "No OffscreenCanvas", tone: caps.offscreenCanvas ? "success" : "warning" }
+                    ]}
+                  />
+                </div>
+                {warning && <p className="warning" style={{ color: '#ef4444', marginTop: '12px', fontSize: '0.85rem' }}>{warning}</p>}
+              </SettingsPanel>
             </div>
-          </form>
 
-          <SettingsPanel title="Processing settings">
-            <p>Mode: {processing.label}</p>
-            <p>Layout: {compact ? "Compact" : "Comfortable"}</p>
-            <p>Memory: {caps.deviceMemory ? `${caps.deviceMemory} GB` : "Unknown"}</p>
-            <StatusPills
-              items={[
-                { label: caps.worker ? "Worker" : "No worker", tone: caps.worker ? "success" : "warning" },
-                { label: caps.wasm ? "WASM" : "No WASM", tone: caps.wasm ? "success" : "warning" },
-                {
-                  label: caps.offscreenCanvas ? "OffscreenCanvas" : "No OffscreenCanvas",
-                  tone: caps.offscreenCanvas ? "success" : "warning"
-                }
-              ]}
-            />
-            {warning && <p className="warning" style={{ color: 'var(--ru-color-warning-foreground, orange)', marginTop: '0.5rem' }}>{warning}</p>}
-          </SettingsPanel>
+            {status === "running" && (
+              <div style={{ marginTop: '24px' }}>
+                <ProgressBar percent={progress.percent} label={progress.label} />
+              </div>
+            )}
 
-          <ProgressBar percent={progress.percent} label={progress.label} />
-
-          {status === "error" && <p className="error" style={{ color: 'var(--ru-color-destructive, red)', marginTop: '1rem' }}>{error}</p>}
-          {status === "success" && (
-            <div style={{ marginTop: '1.5rem' }}>
-              <ResultsList result={result} />
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </section>
+            {status === "error" && (
+              <div style={{ marginTop: '24px', padding: '16px', backgroundColor: '#fef2f2', border: '1px solid #fecaca', borderRadius: 'var(--ru-radius)', color: '#b91c1c', fontSize: '0.9rem' }}>
+                <strong>Error: </strong> {error}
+              </div>
+            )}
+            
+            {status === "success" && (
+              <div style={{ marginTop: '32px', paddingTop: '32px', borderTop: '1px solid var(--ru-color-border)' }}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '16px' }}>Result Ready</h3>
+                <ResultsList result={result} />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </section>
+    </ThemeProvider>
   );
 }

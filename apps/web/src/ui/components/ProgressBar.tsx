@@ -1,4 +1,4 @@
-import { ProgressDisplay } from "@refraction-ui/react";
+import { ProgressDisplay } from "@tinykite/ui";
 import { motionTokens } from "../motion/motionTokens";
 
 export default function ProgressBar({ percent, label }: { percent: number; label: string }) {

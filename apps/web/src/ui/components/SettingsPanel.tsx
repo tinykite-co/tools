@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Icon from "./Icon";
-import { Card, CardHeader, CardTitle, CardContent } from "@refraction-ui/react";
+import { Card, CardHeader, CardTitle, CardContent } from "@tinykite/ui";
 
 export default function SettingsPanel({ title, children }: { title: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);

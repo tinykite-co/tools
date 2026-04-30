@@ -1,5 +1,5 @@
 import type { FieldSchema } from "@tinykite/ui-schema";
-import { Textarea, Select, Input } from "@refraction-ui/react";
+import { Textarea, Select, Input } from "@tinykite/ui";
 
 export default function FieldInput({
   field,
