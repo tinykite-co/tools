@@ -3,6 +3,7 @@ import ServiceWorkerRegister from "../ui/components/ServiceWorkerRegister.astro"
 import "../ui/styles/global.css";
 import { tools } from "../registry/tools/generated/tools.generated";
 import { flows } from "../registry/flows/generated/flows.generated";
+import { CommandPalette } from "../ui/islands/CommandPalette";
 ---
 <html lang="en">
   <head>
@@ -86,8 +87,37 @@ import { flows } from "../registry/flows/generated/flows.generated";
         font-size: 1.25rem;
         color: var(--ru-color-muted-foreground);
         max-width: 600px;
-        margin: 0 auto;
+        margin: 0 auto 2rem;
         font-weight: 400;
+      }
+
+      .search-hint {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: var(--ru-color-muted);
+        border: 1px solid var(--ru-color-border);
+        border-radius: 9999px;
+        font-size: 0.9rem;
+        color: var(--ru-color-muted-foreground);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .search-hint:hover {
+        background: var(--ru-color-accent);
+        color: var(--ru-color-foreground);
+      }
+
+      .search-hint kbd {
+        font-family: inherit;
+        background: var(--ru-color-background);
+        border: 1px solid var(--ru-color-border);
+        border-radius: 4px;
+        padding: 0.1rem 0.4rem;
+        font-size: 0.8rem;
+        font-weight: 600;
       }
 
       .grid-section {
@@ -205,6 +235,11 @@ import { flows } from "../registry/flows/generated/flows.generated";
       <section class="hero">
         <h1>Powerful Local Utilities</h1>
         <p>A premium suite of single-purpose tools that run entirely in your browser. 100% private. 100% free.</p>
+        <button class="search-hint" onclick="document.dispatchEvent(new KeyboardEvent('keydown', {key: 'k', metaKey: true}))">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          Search tools & flows
+          <kbd>Cmd K</kbd>
+        </button>
       </section>
 
       <section class="grid-section">
@@ -242,6 +277,7 @@ import { flows } from "../registry/flows/generated/flows.generated";
         </div>
       </section>
     </main>
+    <CommandPalette client:load tools={tools} flows={flows} />
     <ServiceWorkerRegister />
   </body>
 </html>
