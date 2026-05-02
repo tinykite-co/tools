@@ -10,10 +10,10 @@
   "scripts": {
     "generate": "node scripts/generate-tools-registry.mjs && node scripts/generate-flows-registry.mjs && node scripts/generate-templates-registry.mjs && node scripts/generate-sitemap.mjs",
     "lint": "eslint .",
-    "typecheck": "pnpm run generate && pnpm -r --filter ./packages/** run typecheck && pnpm --filter web run typecheck",
-    "test": "pnpm -r --filter ./packages/** run test",
+    "typecheck": "pnpm run generate && pnpm -r --filter '@tinykite/*' run typecheck && pnpm --filter web run typecheck",
+    "test": "pnpm -r --filter '@tinykite/*' run test",
     "test:e2e": "pnpm --filter web run test:e2e",
-    "build": "pnpm run generate && pnpm --filter web run build",
+    "build": "pnpm run generate && pnpm -r --filter '@tinykite/*' run build && pnpm --filter web run build",
     "dev": "pnpm run generate && pnpm --filter web run dev",
     "changeset": "changeset",
     "version-packages": "changeset version",

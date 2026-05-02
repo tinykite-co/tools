@@ -1,4 +1,5 @@
 import Icon from "./Icon";
+import { Badge } from "@tinykite/ui";
 
 export interface StatusPill {
   label: string;
@@ -7,13 +8,13 @@ export interface StatusPill {
 
 export default function StatusPills({ items }: { items: StatusPill[] }) {
   return (
-    <div className="status-pills">
+    <div className="status-pills" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
       {items.map((item) => (
-        <span key={item.label} className={`pill pill-${item.tone}`}>
+        <Badge key={item.label} variant={item.tone === "success" ? "success" : item.tone === "warning" ? "warning" : "default"}>
           {item.tone === "success" && <Icon name="check" />}
           {item.tone === "warning" && <Icon name="warning" />}
-          {item.label}
-        </span>
+          <span style={{ marginLeft: '4px' }}>{item.label}</span>
+        </Badge>
       ))}
     </div>
   );

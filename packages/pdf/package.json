@@ -1,11 +1,11 @@
 {
-  "name": "@tinykite/$pkg",
+  "name": "@tinykite/pdf",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./src/index.ts"
   },
   "files": ["dist"],
   "scripts": {

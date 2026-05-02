@@ -34,3 +34,32 @@ export interface FlowDefinition {
   steps: string[];
   seo: FlowSeo;
 }
+
+export function sanitizeFileName(name: string): string {
+  return name
+    .replace(/[^a-zA-Z0-9._-]/g, "_")
+    .replace(/_+/g, "_")
+    .replace(/^_|_$/g, "");
+}
+
+export function deriveOutputName(
+  inputName: string,
+  suffix: string,
+  ext: string
+): string {
+  const dotIndex = inputName.lastIndexOf(".");
+  const base = dotIndex > 0 ? inputName.slice(0, dotIndex) : inputName;
+  const sanitized = sanitizeFileName(base);
+  const safeExt = ext.startsWith(".") ? ext : `.${ext}`;
+  return `${sanitized}${suffix}${safeExt}`;
+}
+
+export function buildBatchName(
+  toolSlug: string,
+  index: number,
+  ext: string
+): string {
+  const safeExt = ext.startsWith(".") ? ext : `.${ext}`;
+  const padded = String(index).padStart(3, "0");
+  return `${sanitizeFileName(toolSlug)}-${padded}${safeExt}`;
+}

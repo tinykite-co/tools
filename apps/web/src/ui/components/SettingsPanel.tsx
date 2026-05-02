@@ -1,22 +1,22 @@
 import { useState } from "react";
 import Icon from "./Icon";
+import { Card, CardHeader, CardTitle, CardContent } from "@tinykite/ui";
 
 export default function SettingsPanel({ title, children }: { title: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
-    <section className={`panel ${open ? "panel-open" : ""}`}>
-      <button
-        type="button"
-        className="panel-toggle"
-        aria-expanded={open}
-        onClick={() => setOpen((value) => !value)}
-      >
-        <span>{title}</span>
-        <Icon name={open ? "check" : "warning"} />
-      </button>
-      <div className="panel-body" aria-hidden={!open}>
-        {children}
-      </div>
-    </section>
+    <Card className="settings-panel" style={{ marginTop: '1rem', marginBottom: '1rem' }}>
+      <CardHeader style={{ padding: '0.75rem 1rem', cursor: 'pointer' }} onClick={() => setOpen((value) => !value)}>
+        <CardTitle style={{ fontSize: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: 0 }}>
+          {title}
+          <Icon name={open ? "check" : "warning"} />
+        </CardTitle>
+      </CardHeader>
+      {open && (
+        <CardContent>
+          {children}
+        </CardContent>
+      )}
+    </Card>
   );
 }
