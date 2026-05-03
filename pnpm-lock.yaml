@@ -62,6 +62,9 @@ importers:
       '@tinykite/text':
         specifier: workspace:*
         version: link:../../packages/text
+      '@tinykite/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@tinykite/ui-schema':
         specifier: workspace:*
         version: link:../../packages/ui-schema
