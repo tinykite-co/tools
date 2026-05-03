@@ -14,6 +14,5 @@ export {
   CardDescription,
   CardContent,
   CardFooter,
-  Badge,
-  ProgressDisplay
+  Badge
 } from "@refraction-ui/react";

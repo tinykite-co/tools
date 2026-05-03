@@ -5,5 +5,10 @@ export default defineConfig({
   site: "https://tinykite.co",
   base: "/tools",
   output: "static",
-  integrations: [react()]
+  integrations: [react()],
+  vite: {
+    worker: {
+      format: "es"
+    }
+  }
 });

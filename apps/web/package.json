@@ -19,6 +19,7 @@
     "@tinykite/templates-base": "workspace:*",
     "@tinykite/text": "workspace:*",
     "@tinykite/ui-schema": "workspace:*",
+    "@tinykite/ui": "workspace:*",
     "@tinykite/zip": "workspace:*",
     "astro": "^5.2.5",
     "react": "^18.3.1",

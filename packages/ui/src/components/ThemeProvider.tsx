@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import './theme.css';
+import '../theme.css';
 
 export interface ThemeProviderProps {
   children: React.ReactNode;
