@@ -19,6 +19,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Checkout pro content
+        if: env.PRO_TOKEN != ''
+        env:
+          PRO_TOKEN: ${{ secrets.PRO_REPO_TOKEN }}
         uses: actions/checkout@v4
         with:
           repository: tinykite-co/tinykite-tools-pro
