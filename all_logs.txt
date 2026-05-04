@@ -1,0 +1,191 @@
+build	Set up job	﻿2026-05-03T19:09:53.1454046Z Current runner version: '2.334.0'
+build	Set up job	2026-05-03T19:09:53.1474025Z ##[group]Runner Image Provisioner
+build	Set up job	2026-05-03T19:09:53.1474679Z Hosted Compute Agent
+build	Set up job	2026-05-03T19:09:53.1475207Z Version: 20260213.493
+build	Set up job	2026-05-03T19:09:53.1475684Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+build	Set up job	2026-05-03T19:09:53.1476237Z Build Date: 2026-02-13T00:28:41Z
+build	Set up job	2026-05-03T19:09:53.1477535Z Worker ID: {d1d45956-0279-4e0a-8cc4-dfdabc53df13}
+build	Set up job	2026-05-03T19:09:53.1478562Z Azure Region: northcentralus
+build	Set up job	2026-05-03T19:09:53.1479224Z ##[endgroup]
+build	Set up job	2026-05-03T19:09:53.1481197Z ##[group]Operating System
+build	Set up job	2026-05-03T19:09:53.1481875Z Ubuntu
+build	Set up job	2026-05-03T19:09:53.1482481Z 24.04.4
+build	Set up job	2026-05-03T19:09:53.1483163Z LTS
+build	Set up job	2026-05-03T19:09:53.1483700Z ##[endgroup]
+build	Set up job	2026-05-03T19:09:53.1484315Z ##[group]Runner Image
+build	Set up job	2026-05-03T19:09:53.1485004Z Image: ubuntu-24.04
+build	Set up job	2026-05-03T19:09:53.1485641Z Version: 20260413.86.1
+build	Set up job	2026-05-03T19:09:53.1486616Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260413.86/images/ubuntu/Ubuntu2404-Readme.md
+build	Set up job	2026-05-03T19:09:53.1488143Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260413.86
+build	Set up job	2026-05-03T19:09:53.1488923Z ##[endgroup]
+build	Set up job	2026-05-03T19:09:53.1490242Z ##[group]GITHUB_TOKEN Permissions
+build	Set up job	2026-05-03T19:09:53.1491971Z Contents: read
+build	Set up job	2026-05-03T19:09:53.1492381Z Metadata: read
+build	Set up job	2026-05-03T19:09:53.1492884Z Pages: write
+build	Set up job	2026-05-03T19:09:53.1493281Z ##[endgroup]
+build	Set up job	2026-05-03T19:09:53.1494813Z Secret source: Actions
+build	Set up job	2026-05-03T19:09:53.1495448Z Prepare workflow directory
+build	Set up job	2026-05-03T19:09:53.1750689Z Prepare all required actions
+build	Set up job	2026-05-03T19:09:53.1782005Z Getting action download info
+build	Set up job	2026-05-03T19:09:53.5831030Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+build	Set up job	2026-05-03T19:09:54.0383656Z Download action repository 'pnpm/action-setup@v4' (SHA:b906affcce14559ad1aafd4ab0e942779e9f58b1)
+build	Set up job	2026-05-03T19:09:54.5386654Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+build	Set up job	2026-05-03T19:09:54.7299073Z Download action repository 'actions/configure-pages@v5' (SHA:983d7736d9b0ae728b81ab479565c72886d7745b)
+build	Set up job	2026-05-03T19:09:55.1472664Z Download action repository 'actions/upload-pages-artifact@v3' (SHA:56afc609e74202658d3ffba0e8f6dda462b719fa)
+build	Set up job	2026-05-03T19:09:55.4830572Z Getting action download info
+build	Set up job	2026-05-03T19:09:55.6055209Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+build	Set up job	2026-05-03T19:09:55.9434206Z Complete job name: build
+build	Run actions/checkout@v4	﻿2026-05-03T19:09:55.9970684Z ##[group]Run actions/checkout@v4
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9971320Z with:
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9971631Z   repository: tinykite-co/tools
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9972099Z   token: ***
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9972445Z   ssh-strict: true
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9972735Z   ssh-user: git
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9972992Z   persist-credentials: true
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9973345Z   clean: true
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9973604Z   sparse-checkout-cone-mode: true
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9973936Z   fetch-depth: 1
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9974279Z   fetch-tags: false
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9974552Z   show-progress: true
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9974843Z   lfs: false
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9975093Z   submodules: false
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9975397Z   set-safe-directory: true
+build	Run actions/checkout@v4	2026-05-03T19:09:55.9975830Z ##[endgroup]
+build	Run actions/checkout@v4	2026-05-03T19:09:56.0842555Z Syncing repository: tinykite-co/tools
+build	Run actions/checkout@v4	2026-05-03T19:09:56.0843841Z ##[group]Getting Git version info
+build	Run actions/checkout@v4	2026-05-03T19:09:56.0844342Z Working directory is '/home/runner/work/tools/tools'
+build	Run actions/checkout@v4	2026-05-03T19:09:56.0844909Z [command]/usr/bin/git version
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1438448Z git version 2.53.0
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1458369Z ##[endgroup]
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1476325Z Temporarily overriding HOME='/home/runner/work/_temp/4d54986a-395e-484e-8b3c-13dc304710f7' before making global git config changes
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1477049Z Adding repository directory to the temporary git global config as a safe directory
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1481892Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/tools/tools
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1509538Z Deleting the contents of '/home/runner/work/tools/tools'
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1512442Z ##[group]Initializing the repository
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1516089Z [command]/usr/bin/git init /home/runner/work/tools/tools
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1577671Z hint: Using 'master' as the name for the initial branch. This default branch name
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1579131Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1580286Z hint: to use in all of your new repositories, which will suppress this warning,
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1581289Z hint: call:
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1582060Z hint:
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1582600Z hint: 	git config --global init.defaultBranch <name>
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1583144Z hint:
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1583739Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1584540Z hint: 'development'. The just-created branch can be renamed via this command:
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1585188Z hint:
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1585602Z hint: 	git branch -m <name>
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1586058Z hint:
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1586552Z hint: Disable this message with "git config set advice.defaultBranchName false"
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1587455Z Initialized empty Git repository in /home/runner/work/tools/tools/.git/
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1590118Z [command]/usr/bin/git remote add origin https://github.com/tinykite-co/tools
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1616286Z ##[endgroup]
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1617080Z ##[group]Disabling automatic garbage collection
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1620663Z [command]/usr/bin/git config --local gc.auto 0
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1645292Z ##[endgroup]
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1645955Z ##[group]Setting up auth
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1651495Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1737379Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1921628Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	Run actions/checkout@v4	2026-05-03T19:09:56.1948747Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build	Run actions/checkout@v4	2026-05-03T19:09:56.2145017Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	Run actions/checkout@v4	2026-05-03T19:09:56.2176168Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build	Run actions/checkout@v4	2026-05-03T19:09:56.2360569Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+build	Run actions/checkout@v4	2026-05-03T19:09:56.4184503Z ##[endgroup]
+build	Run actions/checkout@v4	2026-05-03T19:09:56.4185006Z ##[group]Fetching the repository
+build	Run actions/checkout@v4	2026-05-03T19:09:56.4192823Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +0a7bb539b7de642be523a8eb51bfb2f57862fde5:refs/remotes/origin/main
+build	Run actions/checkout@v4	2026-05-03T19:09:57.0356885Z From https://github.com/tinykite-co/tools
+build	Run actions/checkout@v4	2026-05-03T19:09:57.0357646Z  * [new ref]         0a7bb539b7de642be523a8eb51bfb2f57862fde5 -> origin/main
+build	Run actions/checkout@v4	2026-05-03T19:09:57.0380150Z ##[endgroup]
+build	Run actions/checkout@v4	2026-05-03T19:09:57.0380585Z ##[group]Determining the checkout info
+build	Run actions/checkout@v4	2026-05-03T19:09:57.0382569Z ##[endgroup]
+build	Run actions/checkout@v4	2026-05-03T19:09:57.0387012Z [command]/usr/bin/git sparse-checkout disable
+build	Run actions/checkout@v4	2026-05-03T19:09:57.0418578Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+build	Run actions/checkout@v4	2026-05-03T19:09:57.0439653Z ##[group]Checking out the ref
+build	Run actions/checkout@v4	2026-05-03T19:09:57.0443655Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+build	Run actions/checkout@v4	2026-05-03T19:09:57.0551729Z Switched to a new branch 'main'
+build	Run actions/checkout@v4	2026-05-03T19:09:57.0553416Z branch 'main' set up to track 'origin/main'.
+build	Run actions/checkout@v4	2026-05-03T19:09:57.0558701Z ##[endgroup]
+build	Run actions/checkout@v4	2026-05-03T19:09:57.0587467Z [command]/usr/bin/git log -1 --format=%H
+build	Run actions/checkout@v4	2026-05-03T19:09:57.0605157Z 0a7bb539b7de642be523a8eb51bfb2f57862fde5
+build	Inject pro templates and flows	﻿2026-05-03T19:09:57.0777729Z ##[group]Run mkdir -p apps/web/src/registry/templates/injected apps/web/src/registry/flows/injected
+build	Inject pro templates and flows	2026-05-03T19:09:57.0778599Z [36;1mmkdir -p apps/web/src/registry/templates/injected apps/web/src/registry/flows/injected[0m
+build	Inject pro templates and flows	2026-05-03T19:09:57.0778999Z [36;1mif [ -d "_pro/pro/templates" ]; then[0m
+build	Inject pro templates and flows	2026-05-03T19:09:57.0779325Z [36;1m  rsync -a --delete _pro/pro/templates/ apps/web/src/registry/templates/injected/[0m
+build	Inject pro templates and flows	2026-05-03T19:09:57.0779643Z [36;1mfi[0m
+build	Inject pro templates and flows	2026-05-03T19:09:57.0779802Z [36;1mif [ -d "_pro/pro/flows" ]; then[0m
+build	Inject pro templates and flows	2026-05-03T19:09:57.0780081Z [36;1m  rsync -a --delete _pro/pro/flows/ apps/web/src/registry/flows/injected/[0m
+build	Inject pro templates and flows	2026-05-03T19:09:57.0780378Z [36;1mfi[0m
+build	Inject pro templates and flows	2026-05-03T19:09:57.0800368Z shell: /usr/bin/bash -e {0}
+build	Inject pro templates and flows	2026-05-03T19:09:57.0800578Z ##[endgroup]
+build	Run pnpm/action-setup@v4	﻿2026-05-03T19:09:57.0907763Z ##[group]Run pnpm/action-setup@v4
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:57.0908174Z with:
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:57.0908325Z   dest: ~/setup-pnpm
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:57.0908477Z   run_install: null
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:57.0908643Z   cache: false
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:57.0908826Z   cache_dependency_path: pnpm-lock.yaml
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:57.0909084Z   package_json_file: package.json
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:57.0909268Z   standalone: false
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:57.0909411Z ##[endgroup]
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:57.2013690Z ##[group]Running self-installer...
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:57.7837047Z Progress: resolved 1, reused 0, downloaded 0, added 0
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:57.7922749Z Packages: +1
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:57.7923222Z +
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:58.0946899Z Progress: resolved 1, reused 0, downloaded 1, added 1, done
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:58.2389190Z 
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:58.2389690Z dependencies:
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:58.2389945Z + pnpm 9.15.2 (10.33.2 is available)
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:58.2390116Z 
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:58.2412235Z Done in 905ms
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:58.2552113Z ##[endgroup]
+build	Run pnpm/action-setup@v4	2026-05-03T19:09:58.2558960Z Installation Completed!
+build	Run actions/setup-node@v4	﻿2026-05-03T19:09:58.2678791Z ##[group]Run actions/setup-node@v4
+build	Run actions/setup-node@v4	2026-05-03T19:09:58.2679003Z with:
+build	Run actions/setup-node@v4	2026-05-03T19:09:58.2679143Z   node-version: 20
+build	Run actions/setup-node@v4	2026-05-03T19:09:58.2679316Z   cache: pnpm
+build	Run actions/setup-node@v4	2026-05-03T19:09:58.2679455Z   always-auth: false
+build	Run actions/setup-node@v4	2026-05-03T19:09:58.2679618Z   check-latest: false
+build	Run actions/setup-node@v4	2026-05-03T19:09:58.2679863Z   token: ***
+build	Run actions/setup-node@v4	2026-05-03T19:09:58.2680005Z env:
+build	Run actions/setup-node@v4	2026-05-03T19:09:58.2680183Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+build	Run actions/setup-node@v4	2026-05-03T19:09:58.2680412Z ##[endgroup]
+build	Run actions/setup-node@v4	2026-05-03T19:09:58.6201877Z Found in cache @ /opt/hostedtoolcache/node/20.20.2/x64
+build	Run actions/setup-node@v4	2026-05-03T19:09:58.6207277Z ##[group]Environment details
+build	Run actions/setup-node@v4	2026-05-03T19:09:59.0249284Z node: v20.20.2
+build	Run actions/setup-node@v4	2026-05-03T19:09:59.0249614Z npm: 10.8.2
+build	Run actions/setup-node@v4	2026-05-03T19:09:59.0249816Z yarn: 1.22.22
+build	Run actions/setup-node@v4	2026-05-03T19:09:59.0250839Z ##[endgroup]
+build	Run actions/setup-node@v4	2026-05-03T19:09:59.0266843Z [command]/home/runner/setup-pnpm/node_modules/.bin/pnpm store path --silent
+build	Run actions/setup-node@v4	2026-05-03T19:09:59.3096563Z /home/runner/setup-pnpm/node_modules/.bin/store/v3
+build	Run actions/setup-node@v4	2026-05-03T19:09:59.4362988Z pnpm cache is not found
+build	Run pnpm install	﻿2026-05-03T19:09:59.4449921Z ##[group]Run pnpm install
+build	Run pnpm install	2026-05-03T19:09:59.4450149Z [36;1mpnpm install[0m
+build	Run pnpm install	2026-05-03T19:09:59.4473452Z shell: /usr/bin/bash -e {0}
+build	Run pnpm install	2026-05-03T19:09:59.4473636Z env:
+build	Run pnpm install	2026-05-03T19:09:59.4473830Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+build	Run pnpm install	2026-05-03T19:09:59.4474064Z ##[endgroup]
+build	Run pnpm install	2026-05-03T19:09:59.7636717Z Scope: all 10 workspace projects
+build	Run pnpm install	2026-05-03T19:09:59.8184776Z  ERR_PNPM_OUTDATED_LOCKFILE  Cannot install with "frozen-lockfile" because pnpm-lock.yaml is not up to date with <ROOT>/apps/web/package.json
+build	Run pnpm install	2026-05-03T19:09:59.8185263Z 
+build	Run pnpm install	2026-05-03T19:09:59.8185777Z Note that in CI environments this setting is true by default. If you still need to run install in such cases, use "pnpm install --no-frozen-lockfile"
+build	Run pnpm install	2026-05-03T19:09:59.8186179Z 
+build	Run pnpm install	2026-05-03T19:09:59.8186277Z     Failure reason:
+build	Run pnpm install	2026-05-03T19:09:59.8189007Z     specifiers in the lockfile ({"@astrojs/check":"^0.9.9","@astrojs/react":"^3.6.0","@refraction-ui/react":"^0.3.9","@tinykite/core":"workspace:*","@tinykite/image":"workspace:*","@tinykite/pdf":"workspace:*","@tinykite/templates-base":"workspace:*","@tinykite/text":"workspace:*","@tinykite/ui-schema":"workspace:*","@tinykite/zip":"workspace:*","astro":"^5.2.5","react":"^18.3.1","react-dom":"^18.3.1","@playwright/test":"^1.48.0","typescript":"^5.9.3","vitest":"^2.1.9"}) don't match specs in package.json ({"@playwright/test":"^1.48.0","typescript":"^5.9.3","vitest":"^2.1.9","@astrojs/check":"^0.9.9","@astrojs/react":"^3.6.0","@refraction-ui/react":"^0.3.9","@tinykite/core":"workspace:*","@tinykite/image":"workspace:*","@tinykite/pdf":"workspace:*","@tinykite/templates-base":"workspace:*","@tinykite/text":"workspace:*","@tinykite/ui-schema":"workspace:*","@tinykite/ui":"workspace:*","@tinykite/zip":"workspace:*","astro":"^5.2.5","react":"^18.3.1","react-dom":"^18.3.1"})
+build	Run pnpm install	2026-05-03T19:09:59.8359433Z ##[error]Process completed with exit code 1.
+build	Post Run pnpm/action-setup@v4	﻿2026-05-03T19:09:59.8418089Z Post job cleanup.
+build	Post Run pnpm/action-setup@v4	2026-05-03T19:09:59.9612487Z Pruning is unnecessary.
+build	Post Run actions/checkout@v4	﻿2026-05-03T19:09:59.9742812Z Post job cleanup.
+build	Post Run actions/checkout@v4	2026-05-03T19:10:00.0515433Z [command]/usr/bin/git version
+build	Post Run actions/checkout@v4	2026-05-03T19:10:00.0543858Z git version 2.53.0
+build	Post Run actions/checkout@v4	2026-05-03T19:10:00.0574885Z Temporarily overriding HOME='/home/runner/work/_temp/80d3bf2c-1d1c-4861-af0c-4257f9771359' before making global git config changes
+build	Post Run actions/checkout@v4	2026-05-03T19:10:00.0575913Z Adding repository directory to the temporary git global config as a safe directory
+build	Post Run actions/checkout@v4	2026-05-03T19:10:00.0579534Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/tools/tools
+build	Post Run actions/checkout@v4	2026-05-03T19:10:00.0614689Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+build	Post Run actions/checkout@v4	2026-05-03T19:10:00.0639996Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build	Post Run actions/checkout@v4	2026-05-03T19:10:00.0822234Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build	Post Run actions/checkout@v4	2026-05-03T19:10:00.0838957Z http.https://github.com/.extraheader
+build	Post Run actions/checkout@v4	2026-05-03T19:10:00.0848271Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+build	Post Run actions/checkout@v4	2026-05-03T19:10:00.0872267Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build	Post Run actions/checkout@v4	2026-05-03T19:10:00.1059966Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build	Post Run actions/checkout@v4	2026-05-03T19:10:00.1087381Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build	Complete job	﻿2026-05-03T19:10:00.1376756Z Cleaning up orphan processes
+build	Complete job	2026-05-03T19:10:00.1597312Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-node@v4, pnpm/action-setup@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

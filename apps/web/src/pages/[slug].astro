@@ -1,8 +1,8 @@
 ---
-import ServiceWorkerRegister from "../../ui/components/ServiceWorkerRegister.astro";
-import "../../ui/styles/global.css";
-import ToolRunner from "../../ui/islands/ToolRunner";
-import { tools } from "../../registry/tools/generated/tools.generated";
+import ServiceWorkerRegister from "../ui/components/ServiceWorkerRegister.astro";
+import "../ui/styles/global.css";
+import ToolRunner from "../ui/islands/ToolRunner";
+import { tools } from "../registry/tools/generated/tools.generated";
 
 export function getStaticPaths() {
   return tools.map((tool) => ({
@@ -163,8 +163,8 @@ const { tool } = Astro.props;
     <header class="site-header">
       <div class="header-container">
         <a href="/" class="logo-link">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="m3 15 2 2 4-4"/></svg>
-          TinyKite
+          <img src="/icon.png" alt="tinykite Logo" style="width: 32px; height: 32px; border-radius: 8px;" />
+          <span style="font-family: 'Nunito', sans-serif;">tinykite</span>
         </a>
         <nav>
           <a href="/tools" style="text-decoration: none; color: var(--ru-color-muted-foreground); font-weight: 500; font-size: 0.9rem;">Browse All Tools &rarr;</a>
