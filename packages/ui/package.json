@@ -11,7 +11,7 @@
     "dist"
   ],
   "dependencies": {
-    "@refraction-ui/react": "latest",
+    "@refraction-ui/react": "0.9.3",
     "@tinykite/ui-schema": "workspace:*"
   },
   "peerDependencies": {

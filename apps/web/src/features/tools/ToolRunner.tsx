@@ -7,11 +7,13 @@ import { getCapabilities, getDeviceDefaults, getProcessingMode } from "../../lib
 import { executeTool, type ProgressState } from "../../lib/toolExecution";
 import FieldInput from "../../ui/components/FieldInput";
 import OnboardingTips from "../../ui/components/OnboardingTips";
+import PdfDropzone, { type PdfUploadValue } from "./PdfDropzone";
 import PdfFormFields, {
   getInitialPdfFieldValue,
   isFillablePdfField,
   type PdfInspectStatus
 } from "./PdfFormFields";
+import PdfPreview from "./PdfPreview";
 import ProgressBar from "../../ui/components/ProgressBar";
 import ResultsList from "../../ui/components/ResultsList";
 import SettingsPanel from "../../ui/components/SettingsPanel";
@@ -102,6 +104,10 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
   }, []);
 
   const processing = useMemo(() => getProcessingMode(caps), [caps]);
+  const pdfUploadValue = isPdfFormTool && !isMissingPdfUpload(values.pdf)
+    ? values.pdf as PdfUploadValue
+    : "";
+  const pdfPreviewFile = pdfUploadValue ? pdfUploadValue.pdf : null;
 
   const handleRun = async () => {
     const controller = new AbortController();
@@ -116,7 +122,7 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
     if (isPdfFormTool) {
       if (isMissingPdfUpload(values.pdf)) {
         setStatus("error");
-        setError("Please upload an editable PDF.");
+        setError("Please upload a PDF.");
         return;
       }
 
@@ -134,7 +140,7 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
 
       if (!pdfFields.some(isFillablePdfField)) {
         setStatus("error");
-        setError("No fillable fields were found in this PDF.");
+        setError("No editable form fields were found in this PDF.");
         return;
       }
 
@@ -208,17 +214,27 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
 
             <form className="tool-form" onSubmit={(event) => event.preventDefault()}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                {tool.params.map((field) => (
-                  <label key={field.id} className="field" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <span style={{ fontWeight: 500, fontSize: '0.9rem', color: 'var(--ru-color-foreground)' }}>{field.label}</span>
-                    <FieldInput
-                      field={field}
-                      value={values[field.id] ?? ""}
-                      compact={compact}
-                      onChange={(next) => setValues((prev) => ({ ...prev, [field.id]: next }))}
+                {isPdfFormTool ? (
+                  <>
+                    <PdfDropzone
+                      value={pdfUploadValue}
+                      onChange={(next) => setValues((prev) => ({ ...prev, pdf: next }))}
                     />
-                  </label>
-                ))}
+                    <PdfPreview file={pdfPreviewFile} />
+                  </>
+                ) : (
+                  tool.params.map((field) => (
+                    <label key={field.id} className="field" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <span style={{ fontWeight: 500, fontSize: '0.9rem', color: 'var(--ru-color-foreground)' }}>{field.label}</span>
+                      <FieldInput
+                        field={field}
+                        value={values[field.id] ?? ""}
+                        compact={compact}
+                        onChange={(next) => setValues((prev) => ({ ...prev, [field.id]: next }))}
+                      />
+                    </label>
+                  ))
+                )}
                 {isPdfFormTool && (
                   <PdfFormFields
                     fields={pdfFields}

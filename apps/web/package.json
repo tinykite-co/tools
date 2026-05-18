@@ -22,6 +22,7 @@
     "@tinykite/ui-schema": "workspace:*",
     "@tinykite/zip": "workspace:*",
     "astro": "^5.2.5",
+    "pdfjs-dist": "^4.10.38",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

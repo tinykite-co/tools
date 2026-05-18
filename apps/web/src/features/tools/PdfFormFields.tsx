@@ -67,7 +67,7 @@ export default function PdfFormFields({
   if (fillableFields.length === 0) {
     return (
       <div style={{ padding: '14px 16px', border: '1px solid var(--ru-color-border)', borderRadius: 'var(--ru-radius)', color: 'var(--ru-color-muted-foreground)', fontSize: '0.9rem' }}>
-        No fillable fields were found in this PDF.
+        No editable form fields were found in this PDF.
       </div>
     );
   }
@@ -75,7 +75,7 @@ export default function PdfFormFields({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', paddingTop: '8px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-        <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: 'var(--ru-color-foreground)' }}>PDF Fields</h3>
+        <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: 'var(--ru-color-foreground)' }}>Fill Details</h3>
         <span style={{ color: 'var(--ru-color-muted-foreground)', fontSize: '0.82rem' }}>
           {fillableFields.length} field{fillableFields.length === 1 ? "" : "s"}
         </span>
