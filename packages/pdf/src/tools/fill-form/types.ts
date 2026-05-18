@@ -47,9 +47,19 @@ export interface InspectPdfFormResult {
 
 export type PdfFieldValue = string | boolean | string[] | number | null | undefined;
 
+export interface PdfTextOverlay {
+  id: string;
+  pageIndex: number;
+  x: number;
+  y: number;
+  text: string;
+  fontSize?: number;
+}
+
 export interface FillPdfFormOptions {
   pdf: PdfSource;
   values: Record<string, PdfFieldValue>;
+  textOverlays?: PdfTextOverlay[];
   flatten?: boolean;
   outputFileName?: string;
 }
@@ -58,5 +68,6 @@ export interface FillPdfFormSummary {
   fileName: string;
   fieldCount: number;
   filledCount: number;
+  textOverlayCount: number;
   skippedFields: string[];
 }

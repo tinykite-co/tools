@@ -67,7 +67,7 @@ export default function PdfFormFields({
   if (fillableFields.length === 0) {
     return (
       <div style={{ padding: '14px 16px', border: '1px solid var(--ru-color-border)', borderRadius: 'var(--ru-radius)', color: 'var(--ru-color-muted-foreground)', fontSize: '0.9rem' }}>
-        No editable form fields were found in this PDF.
+        No editable form fields were found in this PDF. Use the text placement box above to add details manually.
       </div>
     );
   }

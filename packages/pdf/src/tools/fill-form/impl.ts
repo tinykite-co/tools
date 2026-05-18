@@ -1,4 +1,5 @@
 import { deriveOutputName, type JobResult } from "@tinykite/core";
+import { StandardFonts, rgb, type PDFDocument } from "pdf-lib";
 
 import { fillField, isSupportedFillField } from "./fillField";
 import { toFormField } from "./fields";
@@ -7,8 +8,47 @@ import type {
   FillPdfFormOptions,
   FillPdfFormSummary,
   InspectPdfFormOptions,
-  InspectPdfFormResult
+  InspectPdfFormResult,
+  PdfTextOverlay
 } from "./types";
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
+}
+
+async function drawTextOverlays(
+  pdfDoc: PDFDocument,
+  overlays: PdfTextOverlay[] = []
+): Promise<number> {
+  if (overlays.length === 0) return 0;
+
+  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const pages = pdfDoc.getPages();
+  let drawnCount = 0;
+
+  for (const overlay of overlays) {
+    const text = overlay.text.trim();
+    const page = pages[overlay.pageIndex];
+    if (!text || !page) continue;
+
+    const { width, height } = page.getSize();
+    const fontSize = clamp(overlay.fontSize ?? 12, 6, 48);
+    const x = clamp(overlay.x, 0, 1) * width;
+    const y = height - clamp(overlay.y, 0, 1) * height - fontSize;
+
+    page.drawText(text, {
+      x: clamp(x, 0, width - 8),
+      y: clamp(y, 0, height - fontSize),
+      size: fontSize,
+      font,
+      color: rgb(0.05, 0.06, 0.08),
+      maxWidth: Math.max(1, width - x - 18)
+    });
+    drawnCount += 1;
+  }
+
+  return drawnCount;
+}
 
 export async function inspectPdfForm(
   options: InspectPdfFormOptions
@@ -49,6 +89,8 @@ export async function fillPdfForm(
     }
   }
 
+  const textOverlayCount = await drawTextOverlays(pdfDoc, options.textOverlays);
+
   if (options.flatten) form.flatten();
   else form.updateFieldAppearances();
 
@@ -61,6 +103,7 @@ export async function fillPdfForm(
       fileName,
       fieldCount: fields.length,
       filledCount,
+      textOverlayCount,
       skippedFields
     },
     assets: [

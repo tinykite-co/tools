@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { PdfTextOverlay } from "@tinykite/pdf";
 import workerSrc from "pdfjs-dist/build/pdf.worker.mjs?url";
 
 interface PdfPageInfo {
@@ -7,12 +8,21 @@ interface PdfPageInfo {
 
 function PdfPreviewPage({
   document,
-  pageNumber
+  pageNumber,
+  textOverlays,
+  canPlaceText,
+  onPlaceText,
+  onRemoveTextOverlay
 }: {
   document: any;
   pageNumber: number;
+  textOverlays: PdfTextOverlay[];
+  canPlaceText: boolean;
+  onPlaceText?: (pageIndex: number, x: number, y: number) => void;
+  onRemoveTextOverlay?: (id: string) => void;
 }): JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const pageIndex = pageNumber - 1;
 
   useEffect(() => {
     let cancelled = false;
@@ -52,19 +62,68 @@ function PdfPreviewPage({
   return (
     <div
       style={{
+        position: 'relative',
         background: '#fff',
         border: '1px solid var(--ru-color-border)',
         borderRadius: 'var(--ru-radius)',
         boxShadow: 'var(--ru-shadow-sm)',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        cursor: canPlaceText ? 'crosshair' : 'default'
+      }}
+      onClick={(event) => {
+        if (!canPlaceText || !onPlaceText) return;
+        const rect = event.currentTarget.getBoundingClientRect();
+        onPlaceText(pageIndex, (event.clientX - rect.left) / rect.width, (event.clientY - rect.top) / rect.height);
       }}
     >
       <canvas ref={canvasRef} aria-label={`PDF page ${pageNumber}`} />
+      {textOverlays.map((overlay) => (
+        <button
+          key={overlay.id}
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            onRemoveTextOverlay?.(overlay.id);
+          }}
+          title="Remove text"
+          style={{
+            position: 'absolute',
+            left: `${overlay.x * 100}%`,
+            top: `${overlay.y * 100}%`,
+            transform: 'translateY(-50%)',
+            border: '1px solid #f59e0b',
+            background: 'rgba(254, 243, 199, 0.92)',
+            color: '#111827',
+            borderRadius: '4px',
+            padding: '2px 6px',
+            fontSize: `${Math.max(10, Math.min(22, overlay.fontSize ?? 12))}px`,
+            lineHeight: 1.2,
+            maxWidth: '70%',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}
+        >
+          {overlay.text}
+        </button>
+      ))}
     </div>
   );
 }
 
-export default function PdfPreview({ file }: { file: File | null }): JSX.Element | null {
+export default function PdfPreview({
+  file,
+  textOverlays = [],
+  canPlaceText = false,
+  onPlaceText,
+  onRemoveTextOverlay
+}: {
+  file: File | null;
+  textOverlays?: PdfTextOverlay[];
+  canPlaceText?: boolean;
+  onPlaceText?: (pageIndex: number, x: number, y: number) => void;
+  onRemoveTextOverlay?: (id: string) => void;
+}): JSX.Element | null {
   const [document, setDocument] = useState<any>(null);
   const [pages, setPages] = useState<PdfPageInfo[]>([]);
   const [status, setStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
@@ -153,7 +212,15 @@ export default function PdfPreview({ file }: { file: File | null }): JSX.Element
         }}
       >
         {pages.map((page) => (
-          <PdfPreviewPage key={page.pageNumber} document={document} pageNumber={page.pageNumber} />
+          <PdfPreviewPage
+            key={page.pageNumber}
+            document={document}
+            pageNumber={page.pageNumber}
+            textOverlays={textOverlays.filter((overlay) => overlay.pageIndex === page.pageNumber - 1)}
+            canPlaceText={canPlaceText}
+            onPlaceText={onPlaceText}
+            onRemoveTextOverlay={onRemoveTextOverlay}
+          />
         ))}
       </div>
     </div>

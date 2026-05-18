@@ -20,6 +20,14 @@ async function createEditablePdf() {
   return await pdfDoc.save();
 }
 
+async function createFlatPdf() {
+  const pdfDoc = await PDFDocument.create();
+  const page = pdfDoc.addPage([500, 500]);
+  page.drawText("Flat application form", { x: 50, y: 430, size: 18 });
+  page.drawText("Name:", { x: 50, y: 380, size: 12 });
+  return await pdfDoc.save();
+}
+
 describe("pdf", () => {
   it("returns a placeholder message", () => {
     expect(mergePdfPlaceholder()).toContain("placeholder");
@@ -68,5 +76,30 @@ describe("pdf", () => {
     expect(form.getTextField("person.fullName").getText()).toBe("Ada Lovelace");
     expect(form.getCheckBox("termsAccepted").isChecked()).toBe(true);
     expect(form.getDropdown("country").getSelected()).toEqual(["United States"]);
+  });
+
+  it("draws manual text overlays onto flat PDFs", async () => {
+    const pdf = await createFlatPdf();
+
+    const result = await fillPdfForm({
+      pdf: { data: pdf, filename: "flat.pdf" },
+      values: {},
+      textOverlays: [
+        {
+          id: "name",
+          pageIndex: 0,
+          x: 0.22,
+          y: 0.24,
+          text: "Ada Lovelace",
+          fontSize: 12
+        }
+      ]
+    });
+
+    expect(result.output.fileName).toBe("flat-filled.pdf");
+    expect(result.output.fieldCount).toBe(0);
+    expect(result.output.textOverlayCount).toBe(1);
+    expect(result.assets).toHaveLength(1);
+    expect(result.assets[0]?.sizeBytes).toBeGreaterThan(pdf.byteLength);
   });
 });

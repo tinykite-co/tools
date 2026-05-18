@@ -1,5 +1,10 @@
 import { CancelledError, type ToolDefinition } from "@tinykite/core";
-import { inspectPdfForm, type PdfFormField, type PdfFieldValue } from "@tinykite/pdf";
+import {
+  inspectPdfForm,
+  type PdfFormField,
+  type PdfFieldValue,
+  type PdfTextOverlay
+} from "@tinykite/pdf";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { buildFeedbackUrl } from "../../lib/feedback";
 import { APP_VERSION } from "../../lib/version";
@@ -46,6 +51,8 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
   const [pdfFieldValues, setPdfFieldValues] = useState<Record<string, PdfFieldValue>>({});
   const [pdfInspectStatus, setPdfInspectStatus] = useState<PdfInspectStatus>("idle");
   const [pdfInspectError, setPdfInspectError] = useState<string | null>(null);
+  const [pdfText, setPdfText] = useState("");
+  const [pdfTextOverlays, setPdfTextOverlays] = useState<PdfTextOverlay[]>([]);
   const abortRef = useRef<AbortController | null>(null);
   const isPdfFormTool = tool.runner === pdfFormRunner;
   
@@ -61,6 +68,7 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
     const pdf = values.pdf;
     setPdfFields([]);
     setPdfFieldValues({});
+    setPdfTextOverlays([]);
     setPdfInspectError(null);
 
     if (isMissingPdfUpload(pdf)) {
@@ -108,6 +116,28 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
     ? values.pdf as PdfUploadValue
     : "";
   const pdfPreviewFile = pdfUploadValue ? pdfUploadValue.pdf : null;
+  const hasFillablePdfFields = pdfFields.some(isFillablePdfField);
+  const canAddPdfText = isPdfFormTool && pdfInspectStatus === "ready" && !hasFillablePdfFields;
+
+  const handlePlacePdfText = (pageIndex: number, x: number, y: number) => {
+    const text = pdfText.trim();
+    if (!text) return;
+
+    setPdfTextOverlays((prev) => [
+      ...prev,
+      {
+        id: typeof crypto !== "undefined" && "randomUUID" in crypto
+          ? crypto.randomUUID()
+          : `text-${Date.now()}-${prev.length}`,
+        pageIndex,
+        x,
+        y,
+        text,
+        fontSize: 12
+      }
+    ]);
+    setPdfText("");
+  };
 
   const handleRun = async () => {
     const controller = new AbortController();
@@ -138,15 +168,18 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
         return;
       }
 
-      if (!pdfFields.some(isFillablePdfField)) {
+      const hasTextOverlays = pdfTextOverlays.some((overlay) => overlay.text.trim());
+
+      if (!hasFillablePdfFields && !hasTextOverlays) {
         setStatus("error");
-        setError("No editable form fields were found in this PDF.");
+        setError("No editable fields were found. Type text and click the PDF preview to place it.");
         return;
       }
 
       payload = {
         pdf: values.pdf,
-        values: pdfFieldValues,
+        values: hasFillablePdfFields ? pdfFieldValues : {},
+        textOverlays: pdfTextOverlays,
         flatten: false
       };
     }
@@ -220,7 +253,56 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
                       value={pdfUploadValue}
                       onChange={(next) => setValues((prev) => ({ ...prev, pdf: next }))}
                     />
-                    <PdfPreview file={pdfPreviewFile} />
+                    {canAddPdfText && (
+                      <div
+                        style={{
+                          display: 'grid',
+                          gap: '10px',
+                          padding: '14px 16px',
+                          border: '1px solid var(--ru-color-border)',
+                          borderRadius: 'var(--ru-radius)',
+                          background: '#fff'
+                        }}
+                      >
+                        <label style={{ display: 'grid', gap: '8px' }}>
+                          <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--ru-color-foreground)' }}>
+                            Add text to this PDF
+                          </span>
+                          <input
+                            type="text"
+                            value={pdfText}
+                            placeholder="Type text, then click where it should appear"
+                            onChange={(event) => setPdfText(event.target.value)}
+                            style={{
+                              width: '100%',
+                              border: '1px solid var(--ru-color-border)',
+                              borderRadius: 'var(--ru-radius)',
+                              padding: '0.6rem 0.75rem',
+                              fontSize: '0.95rem'
+                            }}
+                          />
+                        </label>
+                        <div style={{ color: 'var(--ru-color-muted-foreground)', fontSize: '0.85rem' }}>
+                          {pdfText.trim()
+                            ? "Click the document preview to place this text."
+                            : "This PDF has no editable fields, so text can be placed directly on the preview."}
+                        </div>
+                        {pdfTextOverlays.length > 0 && (
+                          <div style={{ color: 'var(--ru-color-muted-foreground)', fontSize: '0.85rem' }}>
+                            {pdfTextOverlays.length} text item{pdfTextOverlays.length === 1 ? "" : "s"} placed.
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    <PdfPreview
+                      file={pdfPreviewFile}
+                      textOverlays={pdfTextOverlays}
+                      canPlaceText={canAddPdfText && pdfText.trim().length > 0}
+                      onPlaceText={handlePlacePdfText}
+                      onRemoveTextOverlay={(id) =>
+                        setPdfTextOverlays((prev) => prev.filter((overlay) => overlay.id !== id))
+                      }
+                    />
                   </>
                 ) : (
                   tool.params.map((field) => (
