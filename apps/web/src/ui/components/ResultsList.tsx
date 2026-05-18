@@ -1,6 +1,16 @@
 import Icon from "./Icon";
 import type { OutputAsset } from "@tinykite/core";
 
+function toBlobPart(data: OutputAsset["data"]): BlobPart {
+  if (data instanceof ArrayBuffer) {
+    return data;
+  }
+
+  const buffer = new ArrayBuffer(data.byteLength);
+  new Uint8Array(buffer).set(data);
+  return buffer;
+}
+
 export default function ResultsList({ result }: { result: any }) {
   if (result === null || result === undefined) {
     return null;
@@ -15,7 +25,7 @@ export default function ResultsList({ result }: { result: any }) {
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1rem' }}>
           {result.assets.map((asset: OutputAsset) => {
             const isImage = asset.mimeType?.startsWith("image/");
-            const blob = new Blob([asset.data], { type: asset.mimeType });
+            const blob = new Blob([toBlobPart(asset.data)], { type: asset.mimeType });
             const url = URL.createObjectURL(blob);
             
             return (

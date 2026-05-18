@@ -120,6 +120,14 @@ describe("JobContext and cancellation", () => {
     expect(events).toHaveLength(1);
   });
 
+  it("reportProgress emits job progress events", () => {
+    const events: unknown[] = [];
+    const { token } = createCancellationToken();
+    const ctx = createJobContext("job-4", token, (e) => events.push(e));
+    ctx.reportProgress(25, "quarter");
+    expect(events).toEqual([{ jobId: "job-4", percent: 25, message: "quarter" }]);
+  });
+
   it("toProgressEvent converts ProgressUpdate to ProgressEvent", () => {
     const event = toProgressEvent("job-3", { percent: 75, message: "done" });
     expect(event.jobId).toBe("job-3");

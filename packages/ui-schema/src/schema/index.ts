@@ -12,6 +12,8 @@ export interface FieldSchema {
   required?: boolean;
   placeholder?: string;
   options?: FieldOption[];
+  accept?: string;
+  multiple?: boolean;
 }
 
 export interface UiSchema {

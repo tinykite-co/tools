@@ -2,6 +2,10 @@ import type { BinaryData } from "@tinykite/core";
 
 import type { ResizeOptions } from "./types.js";
 
+export function resizeImagePlaceholder(options: Partial<ResizeOptions> = {}): string {
+  return `resize placeholder (${options.width ?? 0}x${options.height ?? 0})`;
+}
+
 export async function resizeImage(options: ResizeOptions): Promise<Blob> {
   const { image, width, height, maintainAspectRatio = false } = options;
   

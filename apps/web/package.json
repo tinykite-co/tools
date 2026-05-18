@@ -18,8 +18,8 @@
     "@tinykite/pdf": "workspace:*",
     "@tinykite/templates-base": "workspace:*",
     "@tinykite/text": "workspace:*",
-    "@tinykite/ui-schema": "workspace:*",
     "@tinykite/ui": "workspace:*",
+    "@tinykite/ui-schema": "workspace:*",
     "@tinykite/zip": "workspace:*",
     "astro": "^5.2.5",
     "react": "^18.3.1",
@@ -27,6 +27,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",
+    "@types/react": "^18.3.28",
+    "@types/react-dom": "^18.3.7",
     "typescript": "^5.9.3",
     "vitest": "^2.1.9"
   }

@@ -4,7 +4,7 @@ export type WorkerHandler<TInput = unknown, TOutput = unknown> = (
   payload: TInput
 ) => Promise<TOutput> | TOutput;
 
-export type WorkerRouter = Record<string, WorkerHandler>;
+export type WorkerRouter = Record<string, WorkerHandler<any, unknown>>;
 
 export function registerHandler<TInput, TOutput>(
   handler: WorkerHandler<TInput, TOutput>

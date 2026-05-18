@@ -50,6 +50,8 @@ export default function FieldInput({
         id={field.id}
         name={field.id}
         type="file"
+        accept={field.accept}
+        multiple={field.multiple}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           const file = event.target.files?.[0];
           if (file) {

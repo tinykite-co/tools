@@ -9,6 +9,7 @@ export interface JobContext {
   jobId: string;
   cancellation: CancellationToken;
   onProgress: (event: ProgressEvent) => void;
+  reportProgress: (percent: number, message?: string) => void;
 }
 
 export function createCancellationToken(): {
@@ -32,7 +33,10 @@ export function createJobContext(
   return {
     jobId,
     cancellation,
-    onProgress: onProgress ?? ((): void => {})
+    onProgress: onProgress ?? ((): void => {}),
+    reportProgress: (percent: number, message?: string): void => {
+      onProgress?.({ jobId, percent, message });
+    }
   };
 }
 

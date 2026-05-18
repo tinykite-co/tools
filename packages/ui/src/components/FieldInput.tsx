@@ -48,6 +48,8 @@ export function FieldInput({ field, value, onChange, compact }: FieldInputProps)
         id={field.id}
         name={field.id}
         type="file"
+        accept={field.accept}
+        multiple={field.multiple}
         onChange={async (e: any) => {
           const file = e.target.files?.[0];
           if (file) {

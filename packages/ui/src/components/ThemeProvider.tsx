@@ -6,10 +6,11 @@ export interface ThemeProviderProps {
   themeOverrides?: Record<string, string>;
 }
 
-export function ThemeProvider({ children, themeOverrides }: ThemeProviderProps) {
+export function ThemeProvider({ children, themeOverrides }: ThemeProviderProps): JSX.Element {
   useEffect(() => {
     if (themeOverrides) {
-      const root = document.documentElement;
+      const root = globalThis.document?.documentElement;
+      if (!root) return;
       Object.entries(themeOverrides).forEach(([key, value]) => {
         root.style.setProperty(key, value);
       });
