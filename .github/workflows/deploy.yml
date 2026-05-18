@@ -16,13 +16,16 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PRO_REPO_TOKEN: ${{ secrets.PRO_REPO_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Checkout pro content
+        if: ${{ env.PRO_REPO_TOKEN != '' }}
         uses: actions/checkout@v4
         with:
           repository: tinykite-co/tinykite-tools-pro
-          token: ${{ secrets.PRO_REPO_TOKEN }}
+          token: ${{ env.PRO_REPO_TOKEN }}
           path: _pro
           persist-credentials: false
       - name: Inject pro templates and flows
