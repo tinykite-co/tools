@@ -1,5 +1,5 @@
 import type { FieldSchema } from "@tinykite/ui-schema";
-import { Textarea, Select, Input } from "@tinykite/ui";
+import { Textarea, Input } from "@tinykite/ui";
 
 export default function FieldInput({
   field,
@@ -28,7 +28,7 @@ export default function FieldInput({
 
   if (field.type === "select") {
     return (
-      <Select
+      <select
         id={field.id}
         name={field.id}
         value={value}
@@ -40,7 +40,7 @@ export default function FieldInput({
             {option.label}
           </option>
         ))}
-      </Select>
+      </select>
     );
   }
 

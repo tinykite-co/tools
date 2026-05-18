@@ -237,7 +237,7 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
                   type="button" 
                   onClick={handleRun} 
                   disabled={status === "running"} 
-                  variant="primary"
+                  variant="default"
                   style={{ padding: '0 24px', height: '40px', fontWeight: 500, transition: 'all 0.2s' }}
                 >
                   {status === "running" ? "Processing..." : "Generate Output"}
@@ -251,9 +251,23 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
                 
                 <div style={{ flex: 1 }} />
                 
-                <Button as="a" variant="ghost" href={feedbackUrl} style={{ color: 'var(--ru-color-muted-foreground)' }}>
+                <a
+                  href={feedbackUrl}
+                  style={{
+                    color: 'var(--ru-color-muted-foreground)',
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '40px',
+                    padding: '0 16px',
+                    borderRadius: 'var(--ru-radius)',
+                    fontSize: '0.875rem',
+                    fontWeight: 500
+                  }}
+                >
                   Provide Feedback
-                </Button>
+                </a>
               </div>
             </form>
 

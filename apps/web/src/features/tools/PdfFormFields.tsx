@@ -1,6 +1,6 @@
 import type { PdfFieldValue, PdfFormField } from "@tinykite/pdf";
-import { Input, Select, Textarea } from "@tinykite/ui";
-import type { ChangeEvent } from "react";
+import { Input, Textarea } from "@tinykite/ui";
+import type { CSSProperties, ChangeEvent } from "react";
 
 export type PdfInspectStatus = "idle" | "loading" | "ready" | "error";
 
@@ -18,6 +18,16 @@ export function getInitialPdfFieldValue(field: PdfFormField): PdfFieldValue {
   }
   return typeof field.value === "string" ? field.value : "";
 }
+
+const selectStyle: CSSProperties = {
+  width: '100%',
+  border: '1px solid var(--ru-color-border)',
+  borderRadius: 'var(--ru-radius)',
+  background: 'var(--ru-color-background)',
+  color: 'var(--ru-color-foreground)',
+  padding: '0.5rem 0.75rem',
+  fontSize: '0.9rem'
+};
 
 export default function PdfFormFields({
   fields,
@@ -111,10 +121,11 @@ function PdfFormFieldInput({
   if (field.type === "radio" || field.type === "dropdown") {
     const selected = Array.isArray(value) ? value[0] ?? "" : value ?? "";
     return (
-      <Select
+      <select
         value={String(selected)}
         required={field.required}
         onChange={(event: ChangeEvent<HTMLSelectElement>) => onChange(event.target.value)}
+        style={selectStyle}
       >
         <option value="">Select a value</option>
         {field.options?.map((option) => (
@@ -122,37 +133,39 @@ function PdfFormFieldInput({
             {option}
           </option>
         ))}
-      </Select>
+      </select>
     );
   }
 
   if (field.type === "option-list" && field.multiselect) {
     const selected = new Set(Array.isArray(value) ? value.map(String) : []);
     return (
-      <Select
+      <select
         multiple
         value={[...selected]}
         required={field.required}
         onChange={(event: ChangeEvent<HTMLSelectElement>) => {
           onChange(Array.from(event.target.selectedOptions).map((option) => option.value));
         }}
+        style={{ ...selectStyle, minHeight: '7rem' }}
       >
         {field.options?.map((option) => (
           <option key={option} value={option}>
             {option}
           </option>
         ))}
-      </Select>
+      </select>
     );
   }
 
   if (field.type === "option-list") {
     const selected = Array.isArray(value) ? value[0] ?? "" : value ?? "";
     return (
-      <Select
+      <select
         value={String(selected)}
         required={field.required}
         onChange={(event: ChangeEvent<HTMLSelectElement>) => onChange(event.target.value)}
+        style={selectStyle}
       >
         <option value="">Select a value</option>
         {field.options?.map((option) => (
@@ -160,7 +173,7 @@ function PdfFormFieldInput({
             {option}
           </option>
         ))}
-      </Select>
+      </select>
     );
   }
 
