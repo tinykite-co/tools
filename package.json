@@ -17,7 +17,9 @@
     "dev": "pnpm run generate && pnpm --filter web run dev",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "api:check": "node scripts/api-lock.mjs",
+    "api:update": "node scripts/api-lock.mjs --update"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.7",
