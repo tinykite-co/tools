@@ -35,7 +35,14 @@ function isMissingPdfUpload(value: unknown): boolean {
 
 export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
   const initialValues = useMemo(
-    () => Object.fromEntries(tool.params.map((param) => [param.id, ""])) as Record<string, any>,
+    () => Object.fromEntries(
+      tool.params.map((param) => {
+        if (param.type === "select" && param.options && param.options.length > 0) {
+          return [param.id, param.options[0].value];
+        }
+        return [param.id, ""];
+      })
+    ) as Record<string, any>,
     [tool.params]
   );
   const [values, setValues] = useState<Record<string, any>>(initialValues);
