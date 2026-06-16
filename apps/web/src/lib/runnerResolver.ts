@@ -5,6 +5,8 @@ import * as zip from "@tinykite/zip";
 import { removeBackgroundTask } from "../workers/tasks/image/remove-background";
 import { appIconGeneratorTask } from "../workers/tasks/image/app-icon-generator";
 import { indiaPassportPhotoTask } from "../workers/tasks/image/india-passport-photo";
+import { resizeImageTask } from "../workers/tasks/image/resize";
+import { cropImageTask } from "../workers/tasks/image/crop";
 
 const packageMap: Record<string, Record<string, unknown>> = {
   "@tinykite/text": text,
@@ -13,7 +15,9 @@ const packageMap: Record<string, Record<string, unknown>> = {
     ...image,
     removeBackgroundTask,
     appIconGeneratorTask,
-    indiaPassportPhotoTask
+    indiaPassportPhotoTask,
+    resizeImageTask,
+    cropImageTask
   },
   "@tinykite/zip": zip
 };

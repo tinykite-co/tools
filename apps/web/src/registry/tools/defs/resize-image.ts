@@ -28,7 +28,7 @@ const tool: ToolDefinition = {
       placeholder: "e.g. 512"
     }
   ],
-  runner: "@tinykite/image:resizeImage",
+  runner: "@tinykite/image:resizeImageTask",
   seo: {
     title: "Resize Image Locally",
     description: "Instantly resize images to specific dimensions directly in your browser.",

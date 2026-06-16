@@ -1,9 +1,11 @@
-import { resizeImage } from "@tinykite/image";
+import { cropImage } from "@tinykite/image";
 import type { JobContext, OutputAsset } from "@tinykite/core";
 
-export interface ResizeImagePayload {
+export interface CropImagePayload {
   image?: Blob | ArrayBuffer | { image: Blob | ArrayBuffer; filename?: string };
   filename?: string;
+  x?: number | string;
+  y?: number | string;
   width?: number | string;
   height?: number | string;
 }
@@ -11,14 +13,12 @@ export interface ResizeImagePayload {
 function normalizeInput(payload: any) {
   let rawImage: Blob | ArrayBuffer | undefined;
   let filename = "image.jpg";
-  let width: number;
-  let height: number;
+  let x: number, y: number, width: number, height: number;
 
   if (!payload) {
     throw new Error("No input provided");
   }
 
-  // Handle multi-param form payload: { image: {image, filename}, width, height }
   if (payload.image && typeof payload.image === "object" && "image" in payload.image) {
     rawImage = payload.image.image;
     if (payload.image.filename) filename = payload.image.filename;
@@ -33,6 +33,8 @@ function normalizeInput(payload: any) {
     throw new Error("Image is required");
   }
 
+  x = typeof payload.x === "string" ? parseInt(payload.x, 10) : Number(payload.x) || 0;
+  y = typeof payload.y === "string" ? parseInt(payload.y, 10) : Number(payload.y) || 0;
   width = typeof payload.width === "string" ? parseInt(payload.width, 10) : Number(payload.width);
   height = typeof payload.height === "string" ? parseInt(payload.height, 10) : Number(payload.height);
 
@@ -40,27 +42,28 @@ function normalizeInput(payload: any) {
     throw new Error("Valid width and height are required");
   }
 
-  return { rawImage, filename, width, height };
+  return { rawImage, filename, x, y, width, height };
 }
 
-export async function resizeImageTask(
-  payload: ResizeImagePayload,
+export async function cropImageTask(
+  payload: CropImagePayload,
   ctx?: JobContext
 ): Promise<{ assets: OutputAsset[] }> {
-  const { rawImage, filename, width, height } = normalizeInput(payload);
+  const { rawImage, filename, x, y, width, height } = normalizeInput(payload);
 
   ctx?.reportProgress?.(10, "Preparing image...");
 
   const mimeType = filename.toLowerCase().endsWith(".png") ? "image/png" : "image/jpeg";
   const imageBlob = new Blob([rawImage], { type: mimeType });
 
-  ctx?.reportProgress?.(30, "Resizing...");
+  ctx?.reportProgress?.(30, "Cropping...");
 
-  const resultBlob = await resizeImage({
+  const resultBlob = await cropImage({
     image: imageBlob,
+    x,
+    y,
     width,
     height
-    // maintainAspectRatio left at default (false) to match current tool behavior
   });
 
   ctx?.reportProgress?.(80, "Exporting...");
@@ -68,12 +71,12 @@ export async function resizeImageTask(
   const data = new Uint8Array(await resultBlob.arrayBuffer());
 
   const baseName = filename.split(".").slice(0, -1).join(".") || "image";
-  const outFileName = `${baseName}-resized-${width}x${height}.png`;
+  const outFileName = `${baseName}-cropped-${width}x${height}.png`;
 
   const asset: OutputAsset = {
-    id: `resized-${Date.now()}`,
+    id: `cropped-${Date.now()}`,
     kind: "file",
-    label: `Resized ${width}×${height}`,
+    label: `Cropped ${width}×${height}`,
     fileName: outFileName,
     mimeType: "image/png",
     data,

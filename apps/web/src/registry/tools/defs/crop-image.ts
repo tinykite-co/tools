@@ -42,7 +42,7 @@ const tool: ToolDefinition = {
       placeholder: "e.g. 512"
     }
   ],
-  runner: "@tinykite/image:cropImage",
+  runner: "@tinykite/image:cropImageTask",
   seo: {
     title: "Crop Image",
     description: "Crop and trim images locally in your browser.",
