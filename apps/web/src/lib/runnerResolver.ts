@@ -7,10 +7,14 @@ import { appIconGeneratorTask } from "../workers/tasks/image/app-icon-generator"
 import { indiaPassportPhotoTask } from "../workers/tasks/image/india-passport-photo";
 import { resizeImageTask } from "../workers/tasks/image/resize";
 import { cropImageTask } from "../workers/tasks/image/crop";
+import { imagesToPdfTask } from "../workers/tasks/pdf/images-to-pdf";
 
 const packageMap: Record<string, Record<string, unknown>> = {
   "@tinykite/text": text,
-  "@tinykite/pdf": pdf,
+  "@tinykite/pdf": {
+    ...pdf,
+    imagesToPdfTask
+  },
   "@tinykite/image": {
     ...image,
     removeBackgroundTask,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { PDFDocument } from "pdf-lib";
-import { fillPdfForm, inspectPdfForm, mergePdfPlaceholder } from "../src";
+import { fillPdfForm, inspectPdfForm, mergePdfPlaceholder, imagesToPdfPlaceholder, imagesToPdf } from "../src";
 
 async function createEditablePdf() {
   const pdfDoc = await PDFDocument.create();
@@ -101,5 +101,37 @@ describe("pdf", () => {
     expect(result.output.textOverlayCount).toBe(1);
     expect(result.assets).toHaveLength(1);
     expect(result.assets[0]?.sizeBytes).toBeGreaterThan(pdf.byteLength);
+  });
+});
+
+const TINY_PNG = new Uint8Array([
+  137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 1, 0, 0, 0, 1, 8, 6, 0, 0, 0, 31, 21, 196,
+  137, 0, 0, 0, 13, 73, 68, 65, 84, 120, 218, 99, 252, 207, 192, 240, 31, 0, 5, 5, 2, 0, 95, 200, 241, 210, 0, 0,
+  0, 0, 73, 69, 78, 68, 174, 66, 96, 130
+]);
+
+describe("imagesToPdf", () => {
+  it("returns a placeholder message", () => {
+    expect(imagesToPdfPlaceholder({ images: [] })).toContain("placeholder");
+    expect(imagesToPdfPlaceholder({ images: [TINY_PNG] })).toContain("1 image");
+  });
+
+  it("creates a PDF with one page from a PNG", async () => {
+    const pdfBytes = await imagesToPdf({ images: [TINY_PNG] });
+    expect(pdfBytes).toBeInstanceOf(Uint8Array);
+    expect(pdfBytes.length).toBeGreaterThan(100);
+
+    const loaded = await PDFDocument.load(pdfBytes);
+    expect(loaded.getPageCount()).toBe(1);
+    const page = loaded.getPages()[0];
+    // 1x1 image at 72dpi -> page is 1x1
+    expect(page.getSize().width).toBe(1);
+    expect(page.getSize().height).toBe(1);
+  });
+
+  it("creates a multi-page PDF from multiple images", async () => {
+    const pdfBytes = await imagesToPdf({ images: [TINY_PNG, TINY_PNG] });
+    const loaded = await PDFDocument.load(pdfBytes);
+    expect(loaded.getPageCount()).toBe(2);
   });
 });
