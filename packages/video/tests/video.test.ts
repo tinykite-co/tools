@@ -61,31 +61,50 @@ describe("extractVideoInput", () => {
 });
 
 describe("buildConvertArgs", () => {
-  it("builds mp4 args with scale and x264", () => {
+  it("builds mp4 args with scale, ultrafast x264, and fastdecode tune", () => {
     const args = buildConvertArgs({
       inputName: "input.mov",
       outputName: "output.mp4",
       format: "mp4",
-      quality: 75,
+      quality: 55,
       maxHeight: 720
     });
     expect(args).toContain("-i");
     expect(args).toContain("libx264");
+    expect(args).toContain("ultrafast");
+    expect(args).toContain("fastdecode");
     expect(args).toContain("aac");
     expect(args).toContain("-vf");
     expect(args.join(" ")).toContain("min(720\\,ih)");
   });
 
-  it("builds webm args without scale when original", () => {
+  it("builds remux args as stream copy", async () => {
+    const { buildRemuxArgs } = await import("../src/tools/convert/impl.js");
+    const args = buildRemuxArgs("input.mov", "output.mp4");
+    expect(args).toEqual([
+      "-i",
+      "input.mov",
+      "-c",
+      "copy",
+      "-movflags",
+      "+faststart",
+      "-y",
+      "output.mp4"
+    ]);
+  });
+
+  it("builds webm args with high cpu-used for speed", () => {
     const args = buildConvertArgs({
       inputName: "input.mp4",
       outputName: "output.webm",
       format: "webm",
-      quality: 80,
+      quality: 55,
       maxHeight: null
     });
     expect(args).toContain("libvpx-vp9");
     expect(args).toContain("libopus");
+    expect(args).toContain("-cpu-used");
+    expect(args).toContain("8");
     expect(args).not.toContain("-vf");
   });
 });

@@ -10,6 +10,9 @@ export const FFMPEG_CORE_BASE_URL =
 
 export type VideoOutputFormat = "mp4" | "webm";
 
+/** Convert path: remux is orders of magnitude faster in browser WASM. */
+export type ConvertMode = "fast" | "encode";
+
 export const OUTPUT_MIME: Record<VideoOutputFormat, string> = {
   mp4: "video/mp4",
   webm: "video/webm"
@@ -22,10 +25,15 @@ export const OUTPUT_EXTENSION: Record<VideoOutputFormat, string> = {
 
 export type MaxHeightOption = "original" | "1080" | "720" | "480";
 
-export const DEFAULT_CONVERT_QUALITY = 75;
-export const DEFAULT_FRAME_INTERVAL_SEC = 1;
-export const DEFAULT_MAX_FRAMES = 60;
-export const DEFAULT_FRAME_MAX_WIDTH = 1280;
+/** Prefer speed over quality for browser-side encode. */
+export const DEFAULT_CONVERT_QUALITY = 55;
+export const DEFAULT_CONVERT_MODE: ConvertMode = "fast";
+export const DEFAULT_MAX_HEIGHT: MaxHeightOption = "720";
+
+/** Storyboard defaults tuned for speed + useful overview. */
+export const DEFAULT_FRAME_INTERVAL_SEC = 2;
+export const DEFAULT_MAX_FRAMES = 30;
+export const DEFAULT_FRAME_MAX_WIDTH = 640;
 export const CONTACT_SHEET_COLUMNS = 4;
 export const CONTACT_SHEET_CELL_WIDTH = 320;
 export const CONTACT_SHEET_GAP = 8;

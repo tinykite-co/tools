@@ -30,7 +30,7 @@ test.describe("Convert Video", () => {
 
     await expect(page.getByText("Result ready!")).toBeVisible({ timeout: 180_000 });
     await expect(page.getByRole("link", { name: "Download" })).toBeVisible();
-    await expect(page.getByText(/sample-converted\.mp4/i)).toBeVisible();
+    await expect(page.getByText(/sample-(converted|remuxed)\.mp4/i)).toBeVisible();
 
     expect(pageErrors, pageErrors.join("\n")).toEqual([]);
   });

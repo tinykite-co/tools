@@ -16,7 +16,9 @@ const tool: ToolDefinition = {
     "transcode",
     "ffmpeg",
     "screen recording",
-    "iphone"
+    "iphone",
+    "fast",
+    "remux"
   ],
   params: [
     {
@@ -28,36 +30,52 @@ const tool: ToolDefinition = {
       accept: VIDEO_ACCEPT
     },
     {
-      id: "format",
-      label: "Output format",
+      id: "mode",
+      label: "Speed",
       type: "select",
       required: true,
       options: [
-        { label: "MP4 (H.264 + AAC) — best compatibility", value: "mp4" },
-        { label: "WebM (VP9 + Opus)", value: "webm" }
+        {
+          label: "Fastest — remux if possible, else light re-encode (recommended)",
+          value: "fast"
+        },
+        {
+          label: "Re-encode — apply size & quality settings",
+          value: "encode"
+        }
+      ]
+    },
+    {
+      id: "format",
+      label: "Output format (re-encode only; Fast always targets MP4)",
+      type: "select",
+      required: true,
+      options: [
+        { label: "MP4 (H.264) — fastest encode + best compatibility", value: "mp4" },
+        { label: "WebM (VP9) — slower in browser, smaller sometimes", value: "webm" }
       ]
     },
     {
       id: "quality",
-      label: "Quality",
+      label: "Quality (re-encode only)",
       type: "select",
       required: true,
       options: [
-        { label: "Balanced (recommended)", value: "75" },
-        { label: "High (larger file)", value: "90" },
-        { label: "Smaller file", value: "55" }
+        { label: "Faster / smaller file (recommended for browser)", value: "55" },
+        { label: "Balanced", value: "75" },
+        { label: "Higher quality (slower, larger)", value: "90" }
       ]
     },
     {
       id: "maxHeight",
-      label: "Max height",
+      label: "Max height (re-encode only)",
       type: "select",
       required: true,
       options: [
-        { label: "Original", value: "original" },
+        { label: "720p — best speed/quality tradeoff", value: "720" },
+        { label: "480p — fastest re-encode", value: "480" },
         { label: "1080p", value: "1080" },
-        { label: "720p", value: "720" },
-        { label: "480p", value: "480" }
+        { label: "Original (slowest)", value: "original" }
       ]
     }
   ],
@@ -65,15 +83,15 @@ const tool: ToolDefinition = {
   seo: {
     title: "Convert Video Locally (MOV → MP4)",
     description:
-      "Convert MOV, MKV, AVI, WebM and more to MP4 or WebM entirely in your browser. Private — files never leave your device.",
-    summary: "Browser-side video conversion with H.264 MP4 and WebM output."
+      "Convert MOV, MKV, AVI, WebM and more to MP4 in your browser. Fast remux when possible; private — files never leave your device.",
+    summary: "Browser-side video conversion optimized for speed (remux-first, ultrafast H.264)."
   },
   onboarding: {
-    key: "convert-video-v1",
+    key: "convert-video-v2-fast",
     tips: [
-      "First run downloads a ~31MB video engine (cached afterwards).",
-      "H.264 phone and screen recordings work best; ProRes/HEVC may be slow or fail.",
-      "Everything runs locally — nothing is uploaded to a server."
+      "Fastest mode remuxes (stream copy) when codecs already work — often near-instant for phone MOV → MP4.",
+      "Re-encode only if you need to resize or the remux fails. Prefer MP4 + 720p over WebM/original.",
+      "First run downloads a ~31MB video engine (cached afterwards)."
     ]
   }
 };

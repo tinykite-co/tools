@@ -1,2 +1,2 @@
 export * from "./types.js";
-export * from "./impl.js";
+export { convertVideo, buildConvertArgs, buildRemuxArgs } from "./impl.js";
