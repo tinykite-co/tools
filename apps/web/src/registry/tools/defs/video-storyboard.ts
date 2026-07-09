@@ -12,90 +12,87 @@ const tool: ToolDefinition = {
     "thumbnail",
     "contact sheet",
     "overview",
-    "extract",
     "screenshots",
     "timeline"
   ],
   params: [
     {
       id: "video",
-      label: "Video file",
+      label: "Your video",
       type: "file",
       required: true,
-      placeholder: "Upload a video",
+      placeholder: "Drop a video here",
       accept: VIDEO_ACCEPT
     },
     {
       id: "intervalSeconds",
-      label: "Frame every…",
+      label: "How often",
       type: "select",
       required: true,
       options: [
-        { label: "2 seconds (recommended)", value: "2" },
-        { label: "5 seconds", value: "5" },
-        { label: "1 second", value: "1" },
-        { label: "10 seconds", value: "10" },
-        { label: "0.5 seconds", value: "0.5" }
+        { label: "Every 2 seconds", value: "2" },
+        { label: "Every 5 seconds", value: "5" },
+        { label: "Every second", value: "1" },
+        { label: "Every 10 seconds", value: "10" },
+        { label: "Every half second", value: "0.5" }
       ]
     },
     {
       id: "maxFrames",
-      label: "Max frames",
+      label: "How many moments",
       type: "select",
       required: true,
       options: [
-        { label: "30 frames (recommended)", value: "30" },
-        { label: "24 frames", value: "24" },
-        { label: "60 frames", value: "60" },
-        { label: "90 frames", value: "90" }
+        { label: "30 moments", value: "30" },
+        { label: "24 moments", value: "24" },
+        { label: "60 moments", value: "60" },
+        { label: "90 moments", value: "90" }
       ]
     },
     {
       id: "layout",
-      label: "Output",
+      label: "How it arrives",
       type: "select",
       required: true,
       options: [
-        { label: "Contact sheet (recommended)", value: "contact-sheet" },
-        { label: "Individual frames", value: "frames" },
-        { label: "Contact sheet and individual frames", value: "both" }
+        { label: "One beautiful sheet", value: "contact-sheet" },
+        { label: "Separate stills", value: "frames" },
+        { label: "Sheet and stills", value: "both" }
       ]
     },
     {
       id: "includeTimestamps",
-      label: "Show timestamps",
+      label: "Time marks",
       type: "select",
       required: true,
       options: [
-        { label: "No", value: "false" },
-        { label: "Yes", value: "true" }
+        { label: "Hide", value: "false" },
+        { label: "Show", value: "true" }
       ]
     },
     {
       id: "maxWidth",
-      label: "Frame width",
+      label: "Clarity",
       type: "select",
       required: true,
       options: [
-        { label: "640px (recommended)", value: "640" },
-        { label: "960px", value: "960" },
-        { label: "1280px", value: "1280" }
+        { label: "Soft & light", value: "640" },
+        { label: "Clear", value: "960" },
+        { label: "Sharp", value: "1280" }
       ]
     }
   ],
   runner: "@tinykite/video:videoStoryboardTask",
   seo: {
-    title: "Video Storyboard — Extract Overview Frames",
+    title: "Video Storyboard — See the Whole Story in Stills",
     description:
-      "Turn any video into a contact sheet or set of stills in your browser. Private overview images you can download and share.",
-    summary: "Get a visual overview of a video as stills — privately, in your browser."
+      "Unfold a video into a contact sheet of moments. Private, local, and ready to share as images.",
+    summary: "One video in. The whole story, as stills — only on your device."
   },
   onboarding: {
-    key: "video-storyboard-v3",
+    key: "video-storyboard-awe-v1",
     tips: [
-      "A contact sheet is usually enough to see the whole video at a glance.",
-      "Use a longer interval for longer recordings so the overview stays manageable.",
-      "The first run may take a moment to prepare; later runs are quicker."
+      "A full recording becomes a single glanceable sheet of moments. Nothing is uploaded."
     ]
   }
 };

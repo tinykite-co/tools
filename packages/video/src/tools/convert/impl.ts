@@ -171,7 +171,7 @@ export async function convertVideo(options: ConvertVideoOptions): Promise<Conver
   const outputName = `output.${extension}`;
 
   const ffmpeg = await getFFmpeg(onProgress);
-  onProgress?.(18, "Reading video…");
+  onProgress?.(18, "Opening your video…");
 
   const inputData = await fetchFile(video instanceof Blob ? video : new Blob([video as BlobPart]));
   await deleteIfExists(ffmpeg, inputName);
@@ -181,8 +181,8 @@ export async function convertVideo(options: ConvertVideoOptions): Promise<Conver
   let usedRemux = false;
 
   if (mode === "fast" && format === "mp4") {
-    onProgress?.(22, "Converting…");
-    const detach = attachProgress(ffmpeg, onProgress, 22, 90, "Converting…");
+    onProgress?.(22, "Shaping it…");
+    const detach = attachProgress(ffmpeg, onProgress, 22, 90, "Shaping it…");
     try {
       const code = await runExec(ffmpeg, buildRemuxArgs(inputName, outputName), REMUX_TIMEOUT_MS);
       if (code === 0) {
@@ -191,7 +191,7 @@ export async function convertVideo(options: ConvertVideoOptions): Promise<Conver
           usedRemux = true;
           await deleteIfExists(ffmpeg, inputName);
           await deleteIfExists(ffmpeg, outputName);
-          onProgress?.(100, "Done");
+          onProgress?.(100, "Yours.");
           return { data, mimeType, extension, format, usedRemux };
         }
       }
@@ -201,11 +201,11 @@ export async function convertVideo(options: ConvertVideoOptions): Promise<Conver
       detach();
       await deleteIfExists(ffmpeg, outputName);
     }
-    onProgress?.(28, "Still working…");
+    onProgress?.(28, "Taking the scenic route…");
   }
 
-  onProgress?.(30, "Converting…");
-  const detach = attachProgress(ffmpeg, onProgress, 30, 90, "Converting…");
+  onProgress?.(30, "Shaping it…");
+  const detach = attachProgress(ffmpeg, onProgress, 30, 90, "Shaping it…");
 
   try {
     const args = buildConvertArgs({
@@ -218,26 +218,26 @@ export async function convertVideo(options: ConvertVideoOptions): Promise<Conver
     const code = await runExec(ffmpeg, args, ENCODE_TIMEOUT_MS);
     if (code !== 0) {
       throw new ProcessingError(
-        "Could not convert this video. Try another file, or choose Custom size & quality."
+        "This one didn’t work out. Try another file, or choose “I want control”."
       );
     }
   } catch (error) {
     if (error instanceof ProcessingError) {
       throw error;
     }
-    throw new ProcessingError("Could not convert this video. Please try again.");
+    throw new ProcessingError("Something went sideways. Give it another try.");
   } finally {
     detach();
   }
 
-  onProgress?.(92, "Finishing…");
+  onProgress?.(92, "Almost…");
   const data = await readOutputFile(ffmpeg, outputName);
   await deleteIfExists(ffmpeg, inputName);
   await deleteIfExists(ffmpeg, outputName);
-  onProgress?.(100, "Done");
+  onProgress?.(100, "Yours.");
 
   if (data.byteLength === 0) {
-    throw new ProcessingError("Conversion finished but the file was empty. Please try again.");
+    throw new ProcessingError("That finished empty. Try once more.");
   }
 
   return { data, mimeType, extension, format, usedRemux };

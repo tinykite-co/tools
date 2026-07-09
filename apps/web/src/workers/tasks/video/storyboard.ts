@@ -41,7 +41,7 @@ export async function videoStoryboardTask(
     assets.push({
       id: `storyboard-sheet-${stamp}-${sheet.index}`,
       kind: "file",
-      label: sheet.label,
+      label: result.sheets.length > 1 ? `The story · ${sheet.index + 1}` : "The whole story",
       fileName: sheet.fileName,
       mimeType: sheet.mimeType,
       data: sheet.data,
@@ -53,7 +53,7 @@ export async function videoStoryboardTask(
     assets.push({
       id: `storyboard-frame-${stamp}-${frame.index}`,
       kind: "file",
-      label: frame.label,
+      label: `Moment ${frame.index + 1}`,
       fileName: frame.fileName,
       mimeType: frame.mimeType,
       data: frame.data,

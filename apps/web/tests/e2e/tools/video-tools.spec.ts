@@ -9,7 +9,7 @@ async function uploadAndRun(page: import("@playwright/test").Page): Promise<void
   const input = page.locator('input[type="file"]');
   await expect(input).toBeAttached();
   await input.setInputFiles(SAMPLE_VIDEO);
-  await page.getByRole("button", { name: "Generate Output" }).click();
+  await page.getByRole("button", { name: "Make it" }).click();
 }
 
 test.describe("Convert Video", () => {
@@ -28,9 +28,10 @@ test.describe("Convert Video", () => {
 
     await uploadAndRun(page);
 
-    await expect(page.getByText("Result ready!")).toBeVisible({ timeout: 180_000 });
-    await expect(page.getByRole("link", { name: "Download" })).toBeVisible();
-    await expect(page.getByText(/sample-converted\.mp4/i)).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Yours." })).toBeVisible({
+      timeout: 180_000
+    });
+    await expect(page.getByRole("link", { name: "Keep it" })).toBeVisible();
 
     expect(pageErrors, pageErrors.join("\n")).toEqual([]);
   });
@@ -52,9 +53,11 @@ test.describe("Video Storyboard", () => {
 
     await uploadAndRun(page);
 
-    await expect(page.getByText("Result ready!")).toBeVisible({ timeout: 180_000 });
-    await expect(page.getByText(/storyboard/i).first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Yours." })).toBeVisible({
+      timeout: 180_000
+    });
     await expect(page.locator(".result-wrap img").first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole("link", { name: "Keep it" }).first()).toBeVisible();
 
     expect(pageErrors, pageErrors.join("\n")).toEqual([]);
   });

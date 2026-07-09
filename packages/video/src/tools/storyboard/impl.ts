@@ -201,7 +201,7 @@ async function extractViaSeek(
     const outputName = `frame_${String(i + 1).padStart(4, "0")}.jpg`;
     onProgress?.(
       30 + Math.round((i / attempts) * 50),
-      `Frame ${i + 1} @ ${formatTimestamp(timestampSec)}...`
+      `Moment ${i + 1}…`
     );
 
     try {
@@ -300,7 +300,7 @@ export async function extractStoryboard(options: StoryboardOptions): Promise<Sto
 
   try {
     const ffmpeg = await getFFmpeg(onProgress);
-    onProgress?.(18, "Reading video…");
+    onProgress?.(18, "Opening your video…");
 
     const inputData = await fetchFile(
       video instanceof Blob ? video : new Blob([video as BlobPart])
@@ -310,7 +310,7 @@ export async function extractStoryboard(options: StoryboardOptions): Promise<Sto
     await cleanupNamed(ffmpeg, stale);
     await writeInputFile(ffmpeg, inputName, inputData);
 
-    onProgress?.(25, "Capturing frames…");
+    onProgress?.(25, "Finding the moments…");
 
     let rawFrames: StoryboardFrame[] = [];
     try {
@@ -322,7 +322,7 @@ export async function extractStoryboard(options: StoryboardOptions): Promise<Sto
         maxWidth
       );
     } catch {
-      onProgress?.(28, "Trying another approach…");
+      onProgress?.(28, "Looking closer…");
       rawFrames = await extractViaSeek(
         ffmpeg,
         inputName,
@@ -337,7 +337,7 @@ export async function extractStoryboard(options: StoryboardOptions): Promise<Sto
 
     if (rawFrames.length === 0) {
       throw new ProcessingError(
-        "Could not create stills from this file. It may be audio-only or an unusual format."
+        "We couldn’t pull stills from this file. Try a different clip."
       );
     }
 
@@ -345,7 +345,7 @@ export async function extractStoryboard(options: StoryboardOptions): Promise<Sto
     const sheets: StoryboardFrameAsset[] = [];
 
     if (layout === "contact-sheet" || layout === "both") {
-      onProgress?.(85, "Building overview…");
+      onProgress?.(85, "Laying out the story…");
       try {
         const canvasSheets = await sheetsFromCanvas(rawFrames, includeTimestamps);
         sheets.push(...canvasSheets);
@@ -359,7 +359,7 @@ export async function extractStoryboard(options: StoryboardOptions): Promise<Sto
         ? frameAssets
         : [];
 
-    onProgress?.(100, "Done");
+    onProgress?.(100, "Yours.");
     return {
       frames: returnFrames,
       sheets,
@@ -370,8 +370,6 @@ export async function extractStoryboard(options: StoryboardOptions): Promise<Sto
     if (error instanceof ValidationError || error instanceof ProcessingError) {
       throw error;
     }
-    throw new ProcessingError(
-      "Something went wrong while building the storyboard. Please try again."
-    );
+    throw new ProcessingError("Something got in the way. Try once more.");
   }
 }

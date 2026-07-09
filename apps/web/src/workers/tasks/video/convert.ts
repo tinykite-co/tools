@@ -47,12 +47,12 @@ export async function convertVideoTask(
     }
   });
 
-  const outFileName = deriveOutputName(filename, "-converted", result.extension);
+  const outFileName = deriveOutputName(filename, "", result.extension);
   const sizeMb = (result.data.byteLength / (1024 * 1024)).toFixed(2);
   const asset: OutputAsset = {
     id: `converted-video-${Date.now()}`,
     kind: "file",
-    label: `${result.format.toUpperCase()} · ${sizeMb} MB`,
+    label: sizeMb === "0.00" ? "Your video" : `Your video · ${sizeMb} MB`,
     fileName: outFileName,
     mimeType: result.mimeType,
     data: result.data,

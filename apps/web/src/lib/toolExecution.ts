@@ -7,9 +7,9 @@ export interface ProgressState {
 }
 
 const phases: ProgressState[] = [
-  { label: "Loading inputs", percent: 20 },
-  { label: "Processing", percent: 60 },
-  { label: "Writing output", percent: 100 }
+  { label: "Gathering…", percent: 20 },
+  { label: "Working…", percent: 60 },
+  { label: "Almost there…", percent: 100 }
 ];
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

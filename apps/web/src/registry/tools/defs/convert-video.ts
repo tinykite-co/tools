@@ -14,32 +14,25 @@ const tool: ToolDefinition = {
     "mkv",
     "avi",
     "screen recording",
-    "iphone",
-    "fast"
+    "iphone"
   ],
   params: [
     {
       id: "video",
-      label: "Video file",
+      label: "Your video",
       type: "file",
       required: true,
-      placeholder: "Upload a video",
+      placeholder: "Drop a video here",
       accept: VIDEO_ACCEPT
     },
     {
       id: "mode",
-      label: "Priority",
+      label: "Feel",
       type: "select",
       required: true,
       options: [
-        {
-          label: "Speed (recommended)",
-          value: "fast"
-        },
-        {
-          label: "Custom size & quality",
-          value: "encode"
-        }
+        { label: "Effortless (recommended)", value: "fast" },
+        { label: "I want control", value: "encode" }
       ]
     },
     {
@@ -48,47 +41,45 @@ const tool: ToolDefinition = {
       type: "select",
       required: true,
       options: [
-        { label: "MP4 — works almost everywhere", value: "mp4" },
+        { label: "MP4 — plays everywhere", value: "mp4" },
         { label: "WebM", value: "webm" }
       ]
     },
     {
       id: "quality",
-      label: "Quality",
+      label: "Look",
       type: "select",
       required: true,
       options: [
-        { label: "Smaller file (recommended)", value: "55" },
+        { label: "Light & quick", value: "55" },
         { label: "Balanced", value: "75" },
-        { label: "Higher quality", value: "90" }
+        { label: "Crisp", value: "90" }
       ]
     },
     {
       id: "maxHeight",
-      label: "Resolution",
+      label: "Size",
       type: "select",
       required: true,
       options: [
-        { label: "720p (recommended)", value: "720" },
-        { label: "480p", value: "480" },
+        { label: "720p — just right", value: "720" },
+        { label: "480p — featherweight", value: "480" },
         { label: "1080p", value: "1080" },
-        { label: "Keep original", value: "original" }
+        { label: "As-is", value: "original" }
       ]
     }
   ],
   runner: "@tinykite/video:convertVideoTask",
   seo: {
-    title: "Convert Video Locally (MOV → MP4)",
+    title: "Convert Video — Private, Instant, In Your Browser",
     description:
-      "Convert MOV, MKV, AVI, WebM and more to MP4 right in your browser. Private — your files never leave your device.",
-    summary: "Convert videos privately in your browser — fast by default."
+      "Turn any recording into a clean MP4 without uploading a thing. Your video never leaves your device.",
+    summary: "Any video. A perfect MP4. Nothing leaves your laptop."
   },
   onboarding: {
-    key: "convert-video-v3",
+    key: "convert-video-awe-v1",
     tips: [
-      "Speed mode is usually enough for phone recordings and screen captures.",
-      "Choose Custom size & quality only when you need a specific resolution or smaller file.",
-      "The first conversion may take a moment to prepare; later runs are quicker."
+      "Drop a clip. Keep the defaults. Watch it transform — without sending a byte to the cloud."
     ]
   }
 };

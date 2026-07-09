@@ -20,7 +20,7 @@ export async function getFFmpeg(onProgress?: VideoProgressFn): Promise<FFmpeg> {
   if (!loadPromise) {
     loadPromise = (async () => {
       const ffmpeg = new FFmpeg();
-      onProgress?.(5, "Preparing… (first run may take a moment)");
+      onProgress?.(5, "Warming up…");
 
       const baseURL = FFMPEG_CORE_BASE_URL;
       const coreURL = await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript");
@@ -28,14 +28,12 @@ export async function getFFmpeg(onProgress?: VideoProgressFn): Promise<FFmpeg> {
 
       await ffmpeg.load({ coreURL, wasmURL });
       ffmpegInstance = ffmpeg;
-      onProgress?.(15, "Ready");
+      onProgress?.(15, "Here we go");
       return ffmpeg;
     })().catch(() => {
       loadPromise = null;
       ffmpegInstance = null;
-      throw new Error(
-        "Could not prepare video processing. Check your connection and try again."
-      );
+      throw new Error("Something got in the way. Check your connection and try again.");
     });
   }
 

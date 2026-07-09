@@ -21,8 +21,6 @@ import PdfFormFields, {
 import PdfPreview from "./PdfPreview";
 import ProgressBar from "../../ui/components/ProgressBar";
 import ResultsList from "../../ui/components/ResultsList";
-import SettingsPanel from "../../ui/components/SettingsPanel";
-import StatusPills from "../../ui/components/StatusPills";
 import { motionTokens } from "../../ui/motion/motionTokens";
 import { Button, Card, CardHeader, CardTitle, CardDescription, CardContent, ThemeProvider } from "@tinykite/ui";
 
@@ -380,12 +378,12 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
                   variant="default"
                   style={{ padding: '0 24px', height: '40px', fontWeight: 500, transition: 'all 0.2s' }}
                 >
-                  {status === "running" ? "Processing..." : "Generate Output"}
+                  {status === "running" ? "Working…" : "Make it"}
                 </Button>
                 
                 {status === "running" && (
                   <Button type="button" variant="outline" onClick={handleCancel} style={{ height: '40px' }}>
-                    Cancel
+                    Stop
                   </Button>
                 )}
                 
@@ -406,33 +404,22 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
                     fontWeight: 500
                   }}
                 >
-                  Provide Feedback
+                  Feedback
                 </a>
               </div>
             </form>
 
-            <div style={{ marginTop: '32px' }}>
-              <SettingsPanel title="About this tool">
-                <div style={{ fontSize: '0.85rem', color: 'var(--ru-color-muted-foreground)', lineHeight: 1.5 }}>
-                  Files stay on your device. Nothing is uploaded to our servers.
-                </div>
-                <div style={{ marginTop: '12px' }}>
-                  <StatusPills
-                    items={[
-                      {
-                        label: processing.label === "Full support" ? "Ready on this device" : "Limited on this device",
-                        tone: processing.label === "Full support" ? "success" : "warning"
-                      },
-                      {
-                        label: "Private · local only",
-                        tone: "success"
-                      }
-                    ]}
-                  />
-                </div>
-                {warning && <p className="warning" style={{ color: '#b91c1c', marginTop: '12px', fontSize: '0.85rem' }}>{warning}</p>}
-              </SettingsPanel>
-            </div>
+            <p
+              style={{
+                marginTop: '28px',
+                fontSize: '0.8rem',
+                color: 'var(--ru-color-muted-foreground)',
+                letterSpacing: '0.01em'
+              }}
+            >
+              Never uploaded. Never stored. Only yours.
+              {warning ? ` ${warning}` : ""}
+            </p>
 
             {status === "running" && (
               <div style={{ marginTop: '24px' }}>
@@ -442,13 +429,18 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
 
             {status === "error" && (
               <div style={{ marginTop: '24px', padding: '16px', backgroundColor: '#fef2f2', border: '1px solid #fecaca', borderRadius: 'var(--ru-radius)', color: '#b91c1c', fontSize: '0.9rem' }}>
-                <strong>Error: </strong> {error}
+                {error}
               </div>
             )}
             
             {status === "success" && (
               <div style={{ marginTop: '32px', paddingTop: '32px', borderTop: '1px solid var(--ru-color-border)' }}>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '16px' }}>Result Ready</h3>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '4px', letterSpacing: '-0.02em' }}>
+                  Yours.
+                </h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--ru-color-muted-foreground)', marginBottom: '16px' }}>
+                  Ready when you are.
+                </p>
                 <ResultsList result={result} />
               </div>
             )}
