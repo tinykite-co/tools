@@ -146,6 +146,37 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
     setPdfText("");
   };
 
+  const recoverFileValues = (current: Record<string, any>): Record<string, any> => {
+    // File inputs are uncontrolled; React state can lag behind the DOM after setInputFiles.
+    // Re-read the live input so Generate always sees the selected file.
+    const next = { ...current };
+    for (const param of tool.params) {
+      if (param.type !== "file") continue;
+      const existing = next[param.id];
+      const hasFile =
+        existing instanceof Blob ||
+        (existing &&
+          typeof existing === "object" &&
+          (existing.image instanceof Blob || existing.video instanceof Blob));
+      if (hasFile) continue;
+      if (typeof document === "undefined") continue;
+      const input = document.getElementById(param.id) as HTMLInputElement | null;
+      if (!input?.files?.length) continue;
+      if (param.multiple) {
+        next[param.id] = Array.from(input.files).map((f) => ({
+          image: f,
+          filename: f.name
+        }));
+      } else {
+        const file = input.files[0];
+        if (file) {
+          next[param.id] = { image: file, filename: file.name };
+        }
+      }
+    }
+    return next;
+  };
+
   const handleRun = async () => {
     const controller = new AbortController();
     abortRef.current = controller;
@@ -154,7 +185,11 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
     setResult(null);
     setWarning(processing.warning);
 
-    let payload: unknown = tool.params.length === 1 ? values[tool.params[0].id] ?? "" : values;
+    const resolvedValues = recoverFileValues(values);
+    let payload: unknown =
+      tool.params.length === 1
+        ? resolvedValues[tool.params[0].id] ?? ""
+        : resolvedValues;
 
     if (isPdfFormTool) {
       if (isMissingPdfUpload(values.pdf)) {

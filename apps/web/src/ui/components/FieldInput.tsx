@@ -45,6 +45,21 @@ export default function FieldInput({
   }
 
   if (field.type === "file") {
+    const applyFiles = (fileList: FileList | null) => {
+      if (!fileList || fileList.length === 0) {
+        onChange("");
+        return;
+      }
+      if (field.multiple) {
+        onChange(Array.from(fileList).map((f) => ({ image: f, filename: f.name })));
+        return;
+      }
+      const file = fileList[0];
+      if (file) {
+        onChange({ image: file, filename: file.name });
+      }
+    };
+
     return (
       <Input
         id={field.id}
@@ -53,18 +68,10 @@ export default function FieldInput({
         accept={field.accept}
         multiple={field.multiple}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          const fileList = event.target.files;
-          if (!fileList || fileList.length === 0) {
-            onChange("");
-            return;
-          }
-          if (field.multiple) {
-            const arr = Array.from(fileList).map((f) => ({ image: f, filename: f.name }));
-            onChange(arr);
-          } else {
-            const file = fileList[0];
-            onChange({ image: file, filename: file.name });
-          }
+          applyFiles(event.target.files);
+        }}
+        onInput={(event: React.ChangeEvent<HTMLInputElement>) => {
+          applyFiles(event.target.files);
         }}
       />
     );

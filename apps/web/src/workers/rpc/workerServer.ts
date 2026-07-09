@@ -30,10 +30,21 @@ export function registerRouter(handlers: WorkerRouter, allowDefault = false) {
       const response: WorkerResponse = { id, status: "done", payload: result };
       self.postMessage(response);
     } catch (error) {
+      let message = "Unknown error";
+      if (error instanceof Error && error.message) {
+        message = error.message;
+      } else if (typeof error === "string" && error) {
+        message = error;
+      } else if (error && typeof error === "object" && "message" in error) {
+        const candidate = (error as { message: unknown }).message;
+        if (typeof candidate === "string" && candidate) {
+          message = candidate;
+        }
+      }
       const response: WorkerResponse = {
         id,
         status: "error",
-        error: error instanceof Error ? error.message : "Unknown error"
+        error: message
       };
       self.postMessage(response);
     }

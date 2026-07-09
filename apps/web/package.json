@@ -20,6 +20,7 @@
     "@tinykite/text": "workspace:*",
     "@tinykite/ui": "workspace:*",
     "@tinykite/ui-schema": "workspace:*",
+    "@tinykite/video": "workspace:*",
     "@tinykite/zip": "workspace:*",
     "astro": "^5.2.5",
     "pdfjs-dist": "^4.10.38",
