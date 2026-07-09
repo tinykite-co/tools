@@ -20,12 +20,18 @@ export function getCapabilities() {
 
 export function getProcessingMode(snapshot: ReturnType<typeof getCapabilities>) {
   if (snapshot.worker && snapshot.wasm) {
-    return { label: "Enhanced", warning: null };
+    return { label: "Full support", warning: null };
   }
   if (!snapshot.worker) {
-    return { label: "Standard", warning: "Worker not available; running on main thread." };
+    return {
+      label: "Limited",
+      warning: "This browser may run more slowly for heavy tools."
+    };
   }
-  return { label: "Standard", warning: "WebAssembly unavailable; running standard path." };
+  return {
+    label: "Limited",
+    warning: "Some advanced processing may be unavailable in this browser."
+  };
 }
 
 export function getDeviceDefaults() {

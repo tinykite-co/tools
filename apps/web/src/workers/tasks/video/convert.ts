@@ -47,14 +47,12 @@ export async function convertVideoTask(
     }
   });
 
-  const suffix = result.usedRemux ? "-remuxed" : "-converted";
-  const outFileName = deriveOutputName(filename, suffix, result.extension);
+  const outFileName = deriveOutputName(filename, "-converted", result.extension);
   const sizeMb = (result.data.byteLength / (1024 * 1024)).toFixed(2);
-  const pathLabel = result.usedRemux ? "remux" : "encode";
   const asset: OutputAsset = {
     id: `converted-video-${Date.now()}`,
     kind: "file",
-    label: `${result.format.toUpperCase()} · ${sizeMb} MB · ${pathLabel}`,
+    label: `${result.format.toUpperCase()} · ${sizeMb} MB`,
     fileName: outFileName,
     mimeType: result.mimeType,
     data: result.data,

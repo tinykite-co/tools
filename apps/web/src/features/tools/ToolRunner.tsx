@@ -280,7 +280,7 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
               {tool.title ?? tool.slug}
             </CardTitle>
             <CardDescription style={{ fontSize: '0.875rem', color: 'var(--ru-color-muted-foreground)', marginTop: '4px' }}>
-              Runner: {tool.runner.split(":")[1] ?? tool.runner}
+              {tool.seo.summary}
             </CardDescription>
           </CardHeader>
           
@@ -412,22 +412,25 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
             </form>
 
             <div style={{ marginTop: '32px' }}>
-              <SettingsPanel title="Processing Engine Details">
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '0.85rem', color: 'var(--ru-color-muted-foreground)' }}>
-                  <div><strong>Mode:</strong> {processing.label}</div>
-                  <div><strong>Layout:</strong> {compact ? "Compact" : "Comfortable"}</div>
-                  <div><strong>Memory:</strong> {caps.deviceMemory ? `${caps.deviceMemory} GB` : "Unknown"}</div>
+              <SettingsPanel title="About this tool">
+                <div style={{ fontSize: '0.85rem', color: 'var(--ru-color-muted-foreground)', lineHeight: 1.5 }}>
+                  Files stay on your device. Nothing is uploaded to our servers.
                 </div>
-                <div style={{ marginTop: '16px' }}>
+                <div style={{ marginTop: '12px' }}>
                   <StatusPills
                     items={[
-                      { label: caps.worker ? "Worker Active" : "No Worker", tone: caps.worker ? "success" : "warning" },
-                      { label: caps.wasm ? "WASM Active" : "No WASM", tone: caps.wasm ? "success" : "warning" },
-                      { label: caps.offscreenCanvas ? "OffscreenCanvas Active" : "No OffscreenCanvas", tone: caps.offscreenCanvas ? "success" : "warning" }
+                      {
+                        label: processing.label === "Full support" ? "Ready on this device" : "Limited on this device",
+                        tone: processing.label === "Full support" ? "success" : "warning"
+                      },
+                      {
+                        label: "Private · local only",
+                        tone: "success"
+                      }
                     ]}
                   />
                 </div>
-                {warning && <p className="warning" style={{ color: '#ef4444', marginTop: '12px', fontSize: '0.85rem' }}>{warning}</p>}
+                {warning && <p className="warning" style={{ color: '#b91c1c', marginTop: '12px', fontSize: '0.85rem' }}>{warning}</p>}
               </SettingsPanel>
             </div>
 

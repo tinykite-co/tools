@@ -20,7 +20,7 @@ export async function getFFmpeg(onProgress?: VideoProgressFn): Promise<FFmpeg> {
   if (!loadPromise) {
     loadPromise = (async () => {
       const ffmpeg = new FFmpeg();
-      onProgress?.(5, "Loading video engine (first run downloads ~31MB)...");
+      onProgress?.(5, "Preparing… (first run may take a moment)");
 
       const baseURL = FFMPEG_CORE_BASE_URL;
       const coreURL = await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript");
@@ -28,15 +28,13 @@ export async function getFFmpeg(onProgress?: VideoProgressFn): Promise<FFmpeg> {
 
       await ffmpeg.load({ coreURL, wasmURL });
       ffmpegInstance = ffmpeg;
-      onProgress?.(15, "Video engine ready");
+      onProgress?.(15, "Ready");
       return ffmpeg;
-    })().catch((error: unknown) => {
+    })().catch(() => {
       loadPromise = null;
       ffmpegInstance = null;
-      const message =
-        error instanceof Error ? error.message : "Failed to load video engine";
       throw new Error(
-        `${message}. Check your network (ffmpeg.wasm core is loaded once from a CDN) and try again.`
+        "Could not prepare video processing. Check your connection and try again."
       );
     });
   }

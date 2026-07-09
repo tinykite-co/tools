@@ -179,7 +179,7 @@ async function extractViaFps(
   });
   const code = await ffmpeg.exec(args, BULK_TIMEOUT_MS);
   if (code !== 0) {
-    throw new ProcessingError(`fps extract failed (exit ${code})`);
+    throw new ProcessingError("Could not extract frames from this video.");
   }
   return readFramesFromFs(ffmpeg, intervalSeconds);
 }
@@ -300,7 +300,7 @@ export async function extractStoryboard(options: StoryboardOptions): Promise<Sto
 
   try {
     const ffmpeg = await getFFmpeg(onProgress);
-    onProgress?.(18, "Reading video...");
+    onProgress?.(18, "Reading video…");
 
     const inputData = await fetchFile(
       video instanceof Blob ? video : new Blob([video as BlobPart])
@@ -310,7 +310,7 @@ export async function extractStoryboard(options: StoryboardOptions): Promise<Sto
     await cleanupNamed(ffmpeg, stale);
     await writeInputFile(ffmpeg, inputName, inputData);
 
-    onProgress?.(25, `Sampling ~1 frame every ${intervalSeconds}s...`);
+    onProgress?.(25, "Capturing frames…");
 
     let rawFrames: StoryboardFrame[] = [];
     try {
@@ -322,7 +322,7 @@ export async function extractStoryboard(options: StoryboardOptions): Promise<Sto
         maxWidth
       );
     } catch {
-      onProgress?.(28, "Retrying with seek-based extraction...");
+      onProgress?.(28, "Trying another approach…");
       rawFrames = await extractViaSeek(
         ffmpeg,
         inputName,
@@ -337,7 +337,7 @@ export async function extractStoryboard(options: StoryboardOptions): Promise<Sto
 
     if (rawFrames.length === 0) {
       throw new ProcessingError(
-        "No frames were extracted. The file may be audio-only or use an unsupported codec."
+        "Could not create stills from this file. It may be audio-only or an unusual format."
       );
     }
 
@@ -345,7 +345,7 @@ export async function extractStoryboard(options: StoryboardOptions): Promise<Sto
     const sheets: StoryboardFrameAsset[] = [];
 
     if (layout === "contact-sheet" || layout === "both") {
-      onProgress?.(85, "Building contact sheet...");
+      onProgress?.(85, "Building overview…");
       try {
         const canvasSheets = await sheetsFromCanvas(rawFrames, includeTimestamps);
         sheets.push(...canvasSheets);
@@ -370,6 +370,8 @@ export async function extractStoryboard(options: StoryboardOptions): Promise<Sto
     if (error instanceof ValidationError || error instanceof ProcessingError) {
       throw error;
     }
-    throw new ProcessingError(errorMessage(error));
+    throw new ProcessingError(
+      "Something went wrong while building the storyboard. Please try again."
+    );
   }
 }
