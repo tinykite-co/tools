@@ -1,62 +1,8 @@
 import type { ConvertImageOptions, ImageFormat } from "./types.js";
+import { arrayBufferToBase64, parseSvgInfo, renderSvgToContext } from "./helpers.js";
 
 export function convertImagePlaceholder(options: Partial<ConvertImageOptions> = {}): string {
   return `convert placeholder (${options.targetFormat ?? "png"})`;
-}
-
-function parseSvgInfo(svgText: string): { svg: string; width: number; height: number } {
-  let width: number | undefined;
-  let height: number | undefined;
-
-  const wMatch = svgText.match(/<svg[^>]*\bwidth=["']?([\d.]+)(px)?["']?/i);
-  const hMatch = svgText.match(/<svg[^>]*\bheight=["']?([\d.]+)(px)?["']?/i);
-
-  if (wMatch && wMatch[1]) width = parseFloat(wMatch[1]);
-  if (hMatch && hMatch[1]) height = parseFloat(hMatch[1]);
-
-  const vbMatch = svgText.match(/viewBox=["']?([^"']+)["']?/i);
-  if ((!width || !height) && vbMatch && vbMatch[1]) {
-    const parts = vbMatch[1].trim().split(/[\s,]+/);
-    if (parts.length >= 4 && parts[2] && parts[3]) {
-      const vbW = parseFloat(parts[2]);
-      const vbH = parseFloat(parts[3]);
-      if (!isNaN(vbW) && !isNaN(vbH) && vbW > 0 && vbH > 0) {
-        if (!width) width = vbW;
-        if (!height) height = vbH;
-      }
-    }
-  }
-
-  const finalW = width && width > 0 ? width : 800;
-  const finalH = height && height > 0 ? height : 600;
-
-  let fixedSvg = svgText;
-  if (!wMatch || !hMatch) {
-    fixedSvg = svgText.replace(/<svg\b([^>]*)>/i, (match, p1) => {
-      let attrs = p1;
-      if (!wMatch) attrs += ` width="${finalW}"`;
-      if (!hMatch) attrs += ` height="${finalH}"`;
-      return `<svg${attrs}>`;
-    });
-  }
-
-  return { svg: fixedSvg, width: finalW, height: finalH };
-}
-
-function arrayBufferToBase64(buffer: ArrayBuffer): string {
-  const bytes = new Uint8Array(buffer);
-  let binary = "";
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i] || 0);
-  }
-  if (typeof btoa === "function") {
-    return btoa(binary);
-  }
-  const globalObj = globalThis as unknown as { Buffer?: { from: (s: string, e: string) => { toString: (e: string) => string } } };
-  if (globalObj.Buffer) {
-    return globalObj.Buffer.from(binary, "binary").toString("base64");
-  }
-  return "";
 }
 
 export async function convertImage(options: ConvertImageOptions): Promise<Blob> {
@@ -85,7 +31,7 @@ export async function convertImage(options: ConvertImageOptions): Promise<Blob> 
         svgText = textSample;
       }
     } catch {
-      // ignore non-text blob error
+      // ignore
     }
   }
 
@@ -102,25 +48,23 @@ export async function convertImage(options: ConvertImageOptions): Promise<Blob> 
     return new Blob([svgWrap], { type: "image/svg+xml" });
   }
 
-  let finalBlob = inputBlob;
   let defaultW = width;
   let defaultH = height;
 
   if (isSvg) {
     if (!svgText) svgText = await inputBlob.text();
     const info = parseSvgInfo(svgText);
-    finalBlob = new Blob([info.svg], { type: "image/svg+xml" });
+    svgText = info.svg;
     if (!defaultW) defaultW = info.width;
     if (!defaultH) defaultH = info.height;
   }
 
-  if (typeof createImageBitmap !== "function" || typeof OffscreenCanvas === "undefined") {
-    throw new Error("Canvas/ImageBitmap API not available in current environment");
+  if (typeof OffscreenCanvas === "undefined") {
+    throw new Error("Canvas API not available in current environment");
   }
 
-  const bitmap = await createImageBitmap(finalBlob);
-  const targetW = defaultW ?? bitmap.width;
-  const targetH = defaultH ?? bitmap.height;
+  const targetW = defaultW ?? 800;
+  const targetH = defaultH ?? 600;
 
   const canvas = new OffscreenCanvas(targetW, targetH);
   const ctx = canvas.getContext("2d");
@@ -132,7 +76,15 @@ export async function convertImage(options: ConvertImageOptions): Promise<Blob> 
     ctx.fillRect(0, 0, targetW, targetH);
   }
 
-  ctx.drawImage(bitmap, 0, 0, targetW, targetH);
+  if (isSvg) {
+    await renderSvgToContext(ctx, svgText, targetW, targetH);
+  } else {
+    if (typeof createImageBitmap !== "function") {
+      throw new Error("ImageBitmap API not available");
+    }
+    const bitmap = await createImageBitmap(inputBlob);
+    ctx.drawImage(bitmap, 0, 0, targetW, targetH);
+  }
 
   const formatMimeMap: Record<ImageFormat, string> = {
     png: "image/png",

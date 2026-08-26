@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@imgly/background-removal": "^1.7.0",
-    "@tinykite/core": "workspace:^"
+    "@tinykite/core": "workspace:^",
+    "canvg": "^4.0.3"
   }
 }
