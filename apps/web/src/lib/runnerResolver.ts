@@ -8,6 +8,7 @@ import { appIconGeneratorTask } from "../workers/tasks/image/app-icon-generator"
 import { indiaPassportPhotoTask } from "../workers/tasks/image/india-passport-photo";
 import { resizeImageTask } from "../workers/tasks/image/resize";
 import { cropImageTask } from "../workers/tasks/image/crop";
+import { convertImageTask } from "../workers/tasks/image/convert";
 import { imagesToPdfTask } from "../workers/tasks/pdf/images-to-pdf";
 import { convertVideoTask } from "../workers/tasks/video/convert";
 import { videoStoryboardTask } from "../workers/tasks/video/storyboard";
@@ -24,7 +25,8 @@ const packageMap: Record<string, Record<string, unknown>> = {
     appIconGeneratorTask,
     indiaPassportPhotoTask,
     resizeImageTask,
-    cropImageTask
+    cropImageTask,
+    convertImageTask
   },
   "@tinykite/zip": zip,
   "@tinykite/video": {

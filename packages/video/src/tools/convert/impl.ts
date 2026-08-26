@@ -8,10 +8,7 @@ import {
   OUTPUT_EXTENSION,
   OUTPUT_MIME,
   inputVirtualName,
-  parseMaxHeight,
-  qualityToCrf,
-  type ConvertMode,
-  type VideoOutputFormat
+  parseMaxHeight
 } from "../../lib/formats.js";
 import {
   attachProgress,
@@ -20,121 +17,18 @@ import {
   readOutputFile,
   writeInputFile
 } from "../../lib/ffmpeg-loader.js";
+import {
+  buildConvertArgs,
+  buildRemuxArgs,
+  resolveFormat,
+  resolveMode
+} from "./args.js";
 import type { ConvertVideoOptions, ConvertVideoResult } from "./types.js";
+
+export { buildConvertArgs, buildRemuxArgs, resolveFormat, resolveMode };
 
 const REMUX_TIMEOUT_MS = 120_000;
 const ENCODE_TIMEOUT_MS = 600_000;
-
-function resolveFormat(value: string | undefined): VideoOutputFormat {
-  if (value === "webm") {
-    return "webm";
-  }
-  return "mp4";
-}
-
-function resolveMode(value: string | undefined): ConvertMode {
-  if (value === "encode") {
-    return "encode";
-  }
-  return "fast";
-}
-
-function scaleFilter(maxHeight: number | null): string | null {
-  if (maxHeight == null) {
-    return null;
-  }
-  // Even dimensions help most encoders; only downscale when taller than cap.
-  return `scale=-2:min(${maxHeight}\\,ih)`;
-}
-
-/** Stream-copy remux — fastest path (no decode/encode). MP4 only. */
-export function buildRemuxArgs(inputName: string, outputName: string): string[] {
-  return [
-    "-i",
-    inputName,
-    "-c",
-    "copy",
-    "-movflags",
-    "+faststart",
-    "-y",
-    outputName
-  ];
-}
-
-/**
- * Re-encode args tuned for browser WASM speed:
- * - libx264 ultrafast (VP9 is much slower — avoid unless requested)
- * - copy audio when possible (skips audio encode)
- * - optional downscale
- */
-export function buildConvertArgs(options: {
-  inputName: string;
-  outputName: string;
-  format: VideoOutputFormat;
-  quality: number;
-  maxHeight: number | null;
-}): string[] {
-  const crf = String(qualityToCrf(options.quality));
-  const vf = scaleFilter(options.maxHeight);
-  const args = ["-i", options.inputName];
-
-  if (vf) {
-    args.push("-vf", vf);
-  }
-
-  if (options.format === "webm") {
-    // VP9 is slow in WASM — only when user explicitly picks WebM.
-    args.push(
-      "-c:v",
-      "libvpx-vp9",
-      "-b:v",
-      "0",
-      "-crf",
-      crf,
-      "-cpu-used",
-      "8",
-      "-row-mt",
-      "1",
-      "-c:a",
-      "libopus",
-      "-b:a",
-      "96k"
-    );
-  } else {
-    args.push(
-      "-c:v",
-      "libx264",
-      "-preset",
-      "ultrafast",
-      "-tune",
-      "fastdecode",
-      "-crf",
-      crf,
-      "-pix_fmt",
-      "yuv420p",
-      // Copy audio when the source is already AAC/compatible; falls back if copy fails at exec time.
-      "-c:a",
-      "aac",
-      "-b:a",
-      "96k",
-      "-ac",
-      "2",
-      "-movflags",
-      "+faststart"
-    );
-  }
-
-  args.push("-y", options.outputName);
-  return args;
-}
-
-async function runExec(
-  ffmpeg: Awaited<ReturnType<typeof getFFmpeg>>,
-  args: string[],
-  timeoutMs: number
-): Promise<number> {
-  return ffmpeg.exec(args, timeoutMs);
-}
 
 export async function convertVideo(options: ConvertVideoOptions): Promise<ConvertVideoResult> {
   const {
@@ -153,7 +47,6 @@ export async function convertVideo(options: ConvertVideoOptions): Promise<Conver
 
   const mode = resolveMode(String(modeRaw));
   let format = resolveFormat(String(formatRaw));
-  // Remux only makes sense for MP4; force MP4 in fast mode.
   if (mode === "fast") {
     format = "mp4";
   }
@@ -184,7 +77,7 @@ export async function convertVideo(options: ConvertVideoOptions): Promise<Conver
     onProgress?.(22, "Shaping it…");
     const detach = attachProgress(ffmpeg, onProgress, 22, 90, "Shaping it…");
     try {
-      const code = await runExec(ffmpeg, buildRemuxArgs(inputName, outputName), REMUX_TIMEOUT_MS);
+      const code = await ffmpeg.exec(buildRemuxArgs(inputName, outputName), REMUX_TIMEOUT_MS);
       if (code === 0) {
         const data = await readOutputFile(ffmpeg, outputName);
         if (data.byteLength > 0) {
@@ -215,7 +108,7 @@ export async function convertVideo(options: ConvertVideoOptions): Promise<Conver
       quality: encodeQuality,
       maxHeight
     });
-    const code = await runExec(ffmpeg, args, ENCODE_TIMEOUT_MS);
+    const code = await ffmpeg.exec(args, ENCODE_TIMEOUT_MS);
     if (code !== 0) {
       throw new ProcessingError(
         "This one didn’t work out. Try another file, or choose “I want control”."
