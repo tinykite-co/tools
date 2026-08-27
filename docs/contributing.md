@@ -16,3 +16,12 @@
 ## Testing
 - Unit: `pnpm test`
 - E2E (after build): `pnpm build` then `pnpm test:e2e`
+
+## API Surface Lock
+Every package's public `.d.ts` declarations are captured in `etc/<package>.api.md` report files. CI runs `pnpm api:check` to verify these reports match the current source. If a change modifies any public type, interface, or function signature the check will fail.
+
+**Workflow when you change a package's public API:**
+1. Make your code changes.
+2. Run `pnpm api:update` to regenerate the report files.
+3. Review the diff in the `etc/*.api.md` files to confirm the change is intentional.
+4. Commit the updated reports alongside your code changes.
