@@ -57,3 +57,4 @@ The deploy workflow checks out `tinykite-tools-pro` into `_pro`, then copies:
 
 ## Offline support
 - Service worker lives at `apps/web/public/sw.js` and caches core assets after first load.
+- It is registered from the base path (`/tools/sw.js`, scope `/tools/`). It fetches network-first, so a deploy shows up on the next load, and falls back to the cache when offline.

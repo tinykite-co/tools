@@ -1,8 +1,11 @@
 const CACHE_NAME = "tinykite-static-v1";
+const HTTP_OK = 200;
+// Relative paths resolve against this script's URL, so the worker caches the
+// right files under whatever base path the site is mounted at (e.g. /tools/).
 const CORE_ASSETS = [
-  "/",
-  "/manifest.webmanifest",
-  "/sitemap.xml"
+  "./",
+  "./manifest.webmanifest",
+  "./sitemap.xml"
 ];
 
 self.addEventListener("install", (event) => {
@@ -23,6 +26,14 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+function cacheResponse(request, response) {
+  if (response.status !== HTTP_OK || response.type !== "basic") {
+    return;
+  }
+  const copy = response.clone();
+  caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+}
+
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") {
     return;
@@ -31,18 +42,14 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) {
     return;
   }
+  // Network first: a deploy must reach visitors on their next load. The cache
+  // answers only when the network cannot, which is all offline support needs.
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) {
-        return cached;
-      }
-      return fetch(event.request)
-        .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-          return response;
-        })
-        .catch(() => cached);
-    })
+    fetch(event.request)
+      .then((response) => {
+        cacheResponse(event.request, response);
+        return response;
+      })
+      .catch(() => caches.match(event.request).then((cached) => cached ?? Response.error()))
   );
 });

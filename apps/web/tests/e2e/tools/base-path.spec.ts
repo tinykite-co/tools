@@ -81,3 +81,19 @@ test("the sitemap lists only pages under the base path that exist", async ({ req
     expect.soft(response.status(), location.href).toBe(HTTP_OK);
   }
 });
+
+test("the service worker registers under the base path and serves pages offline", async ({
+  page,
+  context,
+  baseURL
+}) => {
+  await page.goto(BASE_PREFIX);
+  const scope = await page.evaluate(async () => (await navigator.serviceWorker.ready).scope);
+  expect(scope).toBe(new URL(BASE_PREFIX, baseURL).toString());
+  await page.waitForFunction(() => navigator.serviceWorker.controller !== null);
+
+  await context.setOffline(true);
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Powerful Local Utilities" })).toBeVisible();
+  await context.setOffline(false);
+});
