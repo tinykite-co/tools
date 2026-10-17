@@ -1,11 +1,12 @@
 import { expect, test, type Page } from "@playwright/test";
-import { BASE_PATH } from "../../../site.config.mjs";
+import { BASE_PATH, SITE_URL } from "../../../site.config.mjs";
 
 // The app is served under BASE_PATH on the host site, so a URL that leaves it
 // lands on a different site's 404. These tests run against the real build.
 const BASE_PREFIX = `${BASE_PATH.replace(/\/+$/, "")}/`;
 const URL_ATTRIBUTE_SELECTOR = "a[href], link[href], img[src], script[src]";
 const HTTP_OK = 200;
+const SITEMAP_LOC_PATTERN = /<loc>([^<]+)<\/loc>/g;
 
 async function collectSameOriginUrls(page: Page): Promise<URL[]> {
   const rawUrls = await page.$$eval(URL_ATTRIBUTE_SELECTOR, (elements) =>
@@ -66,4 +67,17 @@ test("a tool's Feedback link opens the feedback page with that tool prefilled", 
   const emailLink = page.getByRole("link", { name: "Email feedback" });
   await expect(emailLink).toHaveAttribute("href", /^mailto:support@tinykite\.co\?/);
   await expect(emailLink).toHaveAttribute("href", /subject=TinyKite%20Tools%20feedback%3A%20word-count/);
+});
+
+test("the sitemap lists only pages under the base path that exist", async ({ request, baseURL }) => {
+  const sitemap = await (await request.get(`${BASE_PREFIX}sitemap.xml`)).text();
+  const locations = [...sitemap.matchAll(SITEMAP_LOC_PATTERN)].map((match) => new URL(match[1]));
+  expect(locations.length).toBeGreaterThan(1);
+
+  for (const location of locations) {
+    expect.soft(location.origin, location.href).toBe(SITE_URL);
+    expect.soft(location.pathname.startsWith(BASE_PREFIX), location.href).toBe(true);
+    const response = await request.get(new URL(location.pathname, baseURL).toString());
+    expect.soft(response.status(), location.href).toBe(HTTP_OK);
+  }
 });

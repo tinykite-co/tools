@@ -47,7 +47,7 @@ The deploy workflow checks out `tinykite-tools-pro` into `_pro`, then copies:
 
 ## Base path
 - The build is copied into tinykite.co's `dist/tools/`, so the app is served under `/tools/`, not the domain root.
-- `apps/web/site.config.mjs` holds the site origin and base path that Astro builds with.
+- `apps/web/site.config.mjs` holds the site origin and base path; Astro and the sitemap generator both read it.
 - Build every internal URL with `routes` (`apps/web/src/lib/routes.ts`) and every tinykite.co URL with `mainSite` (`apps/web/src/lib/mainSite.ts`). Never write a root-absolute literal such as `"/feedback"`.
 - `tests/e2e/tools/base-path.spec.ts` crawls the built site and fails on any same-origin URL outside the base path.
 
