@@ -1,26 +1,39 @@
 ---
-const FORM_URL = "https://docs.google.com/forms/d/e/FORM_ID/viewform";
-const ISSUE_URL = "https://github.com/tinykite-co/tinykite-tools/issues/new";
+import ServiceWorkerRegister from "../ui/components/ServiceWorkerRegister.astro";
+import "../ui/styles/global.css";
+import { buildFeedbackMailto, FEEDBACK_EMAIL, FEEDBACK_EMAIL_LINK_ID } from "../lib/feedback";
+import { routes } from "../lib/routes";
 
-const url = new URL(Astro.request.url);
-const tool = url.searchParams.get("tool");
-const version = url.searchParams.get("version");
-const userAgent = url.searchParams.get("ua");
-
-const formUrl = new URL(FORM_URL);
-if (tool) formUrl.searchParams.set("entry.0000000001", tool);
-if (version) formUrl.searchParams.set("entry.0000000002", version);
-if (userAgent) formUrl.searchParams.set("entry.0000000003", userAgent);
-
-if (FORM_URL.includes("FORM_ID")) {
-  const issueUrl = new URL(ISSUE_URL);
-  issueUrl.searchParams.set("title", `Feedback: ${tool ?? "General"}`);
-  issueUrl.searchParams.set(
-    "body",
-    `Tool: ${tool ?? ""}\nVersion: ${version ?? ""}\nUser Agent: ${userAgent ?? ""}\n\nDescribe the issue or idea:`
-  );
-  return Astro.redirect(issueUrl.toString());
-}
-
-return Astro.redirect(formUrl.toString());
+// Rendered without context so the link still works with JavaScript off; the
+// script below adds the tool and version from the query string.
+const genericMailto = buildFeedbackMailto({});
 ---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <link rel="manifest" href={routes.manifest()} />
+    <title>Feedback | Tinykite Tools</title>
+  </head>
+  <body>
+    <main class="page">
+      <h1>Send feedback</h1>
+      <p>Tell us what worked, what didn't, or what you'd like next. Your message goes to the TinyKite team at {FEEDBACK_EMAIL}.</p>
+      <div class="actions">
+        <a id={FEEDBACK_EMAIL_LINK_ID} href={genericMailto}>Email feedback</a>
+        <a class="ghost" href={routes.home()}>Back to all tools</a>
+      </div>
+    </main>
+    <ServiceWorkerRegister />
+  </body>
+</html>
+
+<script>
+  import { buildFeedbackMailto, FEEDBACK_EMAIL_LINK_ID, readFeedbackContext } from "../lib/feedback";
+
+  const emailLink = document.getElementById(FEEDBACK_EMAIL_LINK_ID);
+  if (emailLink instanceof HTMLAnchorElement) {
+    emailLink.href = buildFeedbackMailto(readFeedbackContext(window.location.search));
+  }
+</script>

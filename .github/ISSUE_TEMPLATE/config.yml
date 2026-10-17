@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: Feedback
-    url: https://tools.tinykite.co/feedback
+    url: https://tinykite.co/tools/feedback/
     about: "Share feedback or product ideas."
   - name: Discussions
     url: https://github.com/tinykite-co/tinykite-tools/discussions

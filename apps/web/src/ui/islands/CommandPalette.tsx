@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Input, Badge } from "@tinykite/ui";
+import { routes } from "../../lib/routes";
 
 export function CommandPalette({ tools, flows }: { tools: any[], flows: any[] }) {
   const [open, setOpen] = useState(false);
@@ -61,7 +62,7 @@ export function CommandPalette({ tools, flows }: { tools: any[], flows: any[] })
             <div style={{ padding: '0.5rem' }}>
               <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--ru-color-muted-foreground)', marginBottom: '0.5rem', fontWeight: 600 }}>Free Utilities</div>
               {filteredTools.map(t => (
-                <a href={`/tools/${t.slug}`} key={t.slug} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem', textDecoration: 'none', color: 'var(--ru-color-foreground)', borderRadius: 'var(--ru-radius-sm)', marginBottom: '0.25rem' }} className="cmd-item">
+                <a href={routes.tool(t.slug)} key={t.slug} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem', textDecoration: 'none', color: 'var(--ru-color-foreground)', borderRadius: 'var(--ru-radius-sm)', marginBottom: '0.25rem' }} className="cmd-item">
                   <span style={{ fontWeight: 500 }}>{t.title}</span>
                   <span style={{ fontSize: '0.8rem', color: 'var(--ru-color-muted-foreground)' }}>{t.category}</span>
                 </a>
@@ -76,7 +77,7 @@ export function CommandPalette({ tools, flows }: { tools: any[], flows: any[] })
                 <span style={{ fontSize: '0.65rem', color: 'var(--ru-color-muted-foreground)', textTransform: 'none', fontWeight: 400 }}>(Transparent: You can build these manually using the free tools)</span>
               </div>
               {filteredFlows.map(f => (
-                <a href={`/flows/${f.slug}`} key={f.slug} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem', textDecoration: 'none', color: 'var(--ru-color-foreground)', borderRadius: 'var(--ru-radius-sm)', marginBottom: '0.25rem' }} className="cmd-item">
+                <a href={routes.flow(f.slug)} key={f.slug} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.75rem 1rem', textDecoration: 'none', color: 'var(--ru-color-foreground)', borderRadius: 'var(--ru-radius-sm)', marginBottom: '0.25rem' }} className="cmd-item">
                   <span style={{ fontWeight: 500 }}>{f.title}</span>
                   <span style={{ fontSize: '0.7rem', padding: '0.1rem 0.4rem', border: '1px solid #FF6B6B', color: '#FF6B6B', borderRadius: '4px', fontWeight: 600 }}>PRO</span>
                 </a>
