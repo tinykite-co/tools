@@ -3,6 +3,7 @@ import ServiceWorkerRegister from "../../ui/components/ServiceWorkerRegister.ast
 import "../../ui/styles/global.css";
 import FlowRunner from "../../ui/islands/FlowRunner";
 import { flows } from "../../registry/flows/generated/flows.generated";
+import { routes } from "../../lib/routes";
 
 export function getStaticPaths() {
   return flows.map((flow) => ({
@@ -17,13 +18,13 @@ const { flow } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="manifest" href={routes.manifest()} />
     <title>{flow.title} | Tinykite Tools</title>
     <meta name="description" content={flow.seo.description} />
   </head>
   <body>
     <main class="page">
-      <a href="/">Back</a>
+      <a href={routes.home()}>Back</a>
       <h1>{flow.title}</h1>
       <p>{flow.seo.summary}</p>
       <FlowRunner client:visible flow={flow} />

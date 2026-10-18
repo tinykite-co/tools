@@ -4,12 +4,14 @@ import "../ui/styles/global.css";
 import { tools } from "../registry/tools/generated/tools.generated";
 import { flows } from "../registry/flows/generated/flows.generated";
 import { CommandPalette } from "../ui/islands/CommandPalette";
+import { routes } from "../lib/routes";
+import { mainSite } from "../lib/mainSite";
 ---
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="manifest" href={routes.manifest()} />
     <title>TinyKite Tools - Free SEO Utilities</title>
     <meta name="description" content="A premium suite of free, secure, browser-based utilities. Remove backgrounds, resize images, and more." />
     
@@ -219,12 +221,12 @@ import { CommandPalette } from "../ui/islands/CommandPalette";
   <body>
     <header class="site-header">
       <div class="header-container">
-        <a href="/" class="logo-link">
-          <img src="/icon.png" alt="tinykite Logo" style="width: 32px; height: 32px; border-radius: 8px;" />
+        <a href={mainSite.home} class="logo-link">
+          <img src={mainSite.logo} alt="tinykite Logo" style="width: 32px; height: 32px; border-radius: 8px;" />
           <span style="font-family: 'Nunito', sans-serif;">tinykite</span>
         </a>
         <nav>
-          <a href="https://tinykite.co" style="text-decoration: none; color: var(--ru-color-muted-foreground); font-weight: 500; font-size: 0.9rem;">Back to Studio &rarr;</a>
+          <a href={mainSite.home} style="text-decoration: none; color: var(--ru-color-muted-foreground); font-weight: 500; font-size: 0.9rem;">Back to Studio &rarr;</a>
         </nav>
       </div>
     </header>
@@ -246,7 +248,7 @@ import { CommandPalette } from "../ui/islands/CommandPalette";
         <h2 class="section-title">Free Tools</h2>
         <div class="card-grid">
           {tools.map((tool) => (
-            <a href={`/tools/${tool.slug}`} class="tool-card">
+            <a href={routes.tool(tool.slug)} class="tool-card">
               <div class="tool-category">{tool.category}</div>
               <div class="tool-title">{tool.title}</div>
               <div class="tool-desc">{tool.seo.summary || `Launch the free ${tool.title} utility instantly in your browser.`}</div>
@@ -263,7 +265,7 @@ import { CommandPalette } from "../ui/islands/CommandPalette";
         <h2 class="section-title">Premium Workflows</h2>
         <div class="card-grid">
           {flows.map((flow) => (
-            <a href={`/flows/${flow.slug}`} class="tool-card" style="border-color: var(--ru-color-ring); position: relative; overflow: hidden;">
+            <a href={routes.flow(flow.slug)} class="tool-card" style="border-color: var(--ru-color-ring); position: relative; overflow: hidden;">
               <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #7877C6, #FF6B6B);"></div>
               <div class="tool-category" style="color: var(--ru-color-foreground);">Pro Flow</div>
               <div class="tool-title">{flow.title}</div>

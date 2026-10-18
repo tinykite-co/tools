@@ -1,7 +1,8 @@
 {
   "name": "Tinykite Tools",
   "short_name": "Tinykite",
-  "start_url": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0b0b0b",

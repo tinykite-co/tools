@@ -45,8 +45,16 @@ The deploy workflow checks out `tinykite-tools-pro` into `_pro`, then copies:
 - Version packages: `pnpm version-packages`
 - Publish (requires `NPM_TOKEN`): `pnpm release`
 
+## Base path
+- The build is copied into tinykite.co's `dist/tools/`, so the app is served under `/tools/`, not the domain root.
+- `apps/web/site.config.mjs` holds the site origin and base path; Astro and the sitemap generator both read it.
+- Build every internal URL with `routes` (`apps/web/src/lib/routes.ts`) and every tinykite.co URL with `mainSite` (`apps/web/src/lib/mainSite.ts`). Never write a root-absolute literal such as `"/feedback"`.
+- `tests/e2e/tools/base-path.spec.ts` crawls the built site and fails on any same-origin URL outside the base path.
+
 ## Feedback page
-- Update `apps/web/src/pages/feedback.astro` with your Google Form ID and entry IDs.
+- Tool pages link to `/tools/feedback/?tool=<slug>&version=<version>`.
+- The page links to a prefilled email to `support@tinykite.co` (`FEEDBACK_EMAIL` in `apps/web/src/lib/feedback.ts`), which is the address tinykite.co's contact and support pages publish.
 
 ## Offline support
 - Service worker lives at `apps/web/public/sw.js` and caches core assets after first load.
+- It is registered from the base path (`/tools/sw.js`, scope `/tools/`). It fetches network-first, so a deploy shows up on the next load, and falls back to the cache when offline.

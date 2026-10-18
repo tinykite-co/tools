@@ -7,6 +7,7 @@ import {
 } from "@tinykite/pdf";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { buildFeedbackUrl } from "../../lib/feedback";
+import { routes } from "../../lib/routes";
 import { APP_VERSION } from "../../lib/version";
 import { getCapabilities, getDeviceDefaults, getProcessingMode } from "../../lib/capabilities";
 import { executeTool, type ProgressState } from "../../lib/toolExecution";
@@ -256,7 +257,7 @@ export default function ToolRunner({ tool }: { tool: ToolDefinition }) {
     setProgress(emptyProgress);
   };
 
-  const feedbackUrl = buildFeedbackUrl({
+  const feedbackUrl = buildFeedbackUrl(routes.feedback(), {
     tool: tool.slug,
     version: APP_VERSION,
     userAgent

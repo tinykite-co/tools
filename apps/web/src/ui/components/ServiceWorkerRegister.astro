@@ -1,7 +1,12 @@
 <script>
+  import { routes } from "../../lib/routes";
+
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/sw.js").catch(() => undefined);
+      // Offline support is optional: a failed registration must not break the page.
+      navigator.serviceWorker
+        .register(routes.serviceWorker())
+        .catch((error: unknown) => console.warn("Service worker registration failed", error));
     });
   }
 </script>

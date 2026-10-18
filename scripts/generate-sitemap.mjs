@@ -1,5 +1,6 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
+import { BASE_PATH, SITE_URL } from "../apps/web/site.config.mjs";
 
 const repoRoot = new URL("..", import.meta.url).pathname;
 const toolsDir = join(repoRoot, "apps/web/src/registry/tools/defs");
@@ -52,7 +53,10 @@ async function extractSlugsFromInjected(dir) {
   return slugs.sort();
 }
 
-const base = "https://tools.tinykite.co";
+// The app is served under BASE_PATH on SITE_URL. Paths mirror createAppRoutes
+// in apps/web/src/lib/urls.ts: pages are emitted as <page>/index.html, so
+// their canonical URLs end in a slash.
+const appRoot = `${SITE_URL}${BASE_PATH.replace(/\/+$/, "")}/`;
 const toolSlugs = await extractSlugsFromDefs(toolsDir);
 const flowSlugs = [
   ...(await extractSlugsFromDefs(flowsDefsDir)),
@@ -61,12 +65,12 @@ const flowSlugs = [
 
 const urls = [
   "",
-  ...toolSlugs.map((slug) => `/tools/${slug}`),
-  ...flowSlugs.map((slug) => `/flows/${slug}`)
+  ...toolSlugs.map((slug) => `${slug}/`),
+  ...flowSlugs.map((slug) => `flows/${slug}/`)
 ];
 
 const xml = `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n${urls
-  .map((path) => `  <url><loc>${base}${path}</loc></url>`)
+  .map((path) => `  <url><loc>${appRoot}${path}</loc></url>`)
   .join("\n")}\n</urlset>\n`;
 
 await mkdir(dirname(outFile), { recursive: true });

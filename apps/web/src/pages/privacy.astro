@@ -1,12 +1,13 @@
 ---
 import ServiceWorkerRegister from "../ui/components/ServiceWorkerRegister.astro";
 import "../ui/styles/global.css";
+import { routes } from "../lib/routes";
 ---
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="manifest" href={routes.manifest()} />
     <title>Privacy | Tinykite Tools</title>
   </head>
   <body>

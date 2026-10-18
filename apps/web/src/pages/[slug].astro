@@ -3,6 +3,8 @@ import ServiceWorkerRegister from "../ui/components/ServiceWorkerRegister.astro"
 import "../ui/styles/global.css";
 import ToolRunner from "../ui/islands/ToolRunner";
 import { tools } from "../registry/tools/generated/tools.generated";
+import { routes } from "../lib/routes";
+import { mainSite } from "../lib/mainSite";
 
 export function getStaticPaths() {
   return tools.map((tool) => ({
@@ -17,7 +19,7 @@ const { tool } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="manifest" href={routes.manifest()} />
     <title>{tool.title} - Free Online Tool | TinyKite</title>
     <meta name="description" content={tool.seo.description || `Use our free online ${tool.title} to get professional results instantly. No signup required.`} />
     <meta property="og:title" content={`${tool.title} | TinyKite`} />
@@ -162,12 +164,12 @@ const { tool } = Astro.props;
   <body>
     <header class="site-header">
       <div class="header-container">
-        <a href="/" class="logo-link">
-          <img src="/icon.png" alt="tinykite Logo" style="width: 32px; height: 32px; border-radius: 8px;" />
+        <a href={mainSite.home} class="logo-link">
+          <img src={mainSite.logo} alt="tinykite Logo" style="width: 32px; height: 32px; border-radius: 8px;" />
           <span style="font-family: 'Nunito', sans-serif;">tinykite</span>
         </a>
         <nav>
-          <a href="/tools" style="text-decoration: none; color: var(--ru-color-muted-foreground); font-weight: 500; font-size: 0.9rem;">Browse All Tools &rarr;</a>
+          <a href={routes.home()} style="text-decoration: none; color: var(--ru-color-muted-foreground); font-weight: 500; font-size: 0.9rem;">Browse All Tools &rarr;</a>
         </nav>
       </div>
     </header>
@@ -205,9 +207,9 @@ const { tool } = Astro.props;
       <div style="max-width: var(--max-width); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div style="font-weight: 600; color: var(--ru-color-foreground);">TinyKite &copy; 2026</div>
         <div style="display: flex; gap: 1.5rem; font-size: 0.9rem;">
-          <a href="/" style="color: inherit; text-decoration: none;">Home</a>
-          <a href="/privacy" style="color: inherit; text-decoration: none;">Privacy</a>
-          <a href="/terms" style="color: inherit; text-decoration: none;">Terms</a>
+          <a href={mainSite.home} style="color: inherit; text-decoration: none;">Home</a>
+          <a href={mainSite.privacy} style="color: inherit; text-decoration: none;">Privacy</a>
+          <a href={mainSite.terms} style="color: inherit; text-decoration: none;">Terms</a>
         </div>
       </div>
     </footer>
